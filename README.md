@@ -17,6 +17,25 @@ python -m http.server 8765 --bind 127.0.0.1
 
 Then open http://127.0.0.1:8765/
 
+## Password-protected build
+
+`build.mjs` embeds `data/*.json` into the page and encrypts it with StatiCrypt (AES-256). The result is `dist/index.html`, which shows only a passphrase prompt until the right passphrase is entered.
+
+```
+npm install
+DASHBOARD_PASSPHRASE="a long passphrase" node build.mjs
+```
+
+- The passphrase must be at least 16 characters. The build refuses to run without it, so an unencrypted page is never produced.
+- The encrypted file is public once deployed, so anyone can try passphrases offline. Use a long, random passphrase.
+- `.github/workflows/deploy.yml` runs the build on every push to `main` and deploys `dist/` to GitHub Pages. It reads the passphrase from the repository secret `DASHBOARD_PASSPHRASE`.
+
+### One-time GitHub setup
+
+1. Settings, Secrets and variables, Actions: add a secret named `DASHBOARD_PASSPHRASE`.
+2. Settings, Pages: set Source to **GitHub Actions**. Free Pages needs the repo to be public.
+3. Run the workflow from the Actions tab, or push a change.
+
 ## Plan for hosting
 
 1. Host on GitHub Pages.
