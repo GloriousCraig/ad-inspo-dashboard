@@ -1,17 +1,272 @@
 {
-  "meta": { "sample": true, "generated": "2026-10-01T18:00:00Z" },
+  "meta": {
+    "sample": true,
+    "generated": "2026-10-01T18:00:00Z"
+  },
   "ads": [
-    { "ID": 1, "Title": "Sample Brand A", "SourceLink": { "Url": "https://example.com/sample-1" }, "AdFormat": "Video", "Hook": "Mouse is dropped from a desk, bounces, still tracks.", "WhyItWorks": "Shows durability in the first two seconds with no talking.", "GloriousIdea": "Same drop test with our lightest mouse.", "AlreadyRun": "No", "ConceptTags": ["Product demo / in-use", "Feature callout (weight, sensor, switches, battery)"], "ExecutionTags": ["Product hero (clean studio shots)", "Motion graphics / animation"], "SubmittedByName": "sample.user@example.com", "Created": "2026-09-02T15:00:00Z" },
-    { "ID": 2, "Title": "Sample Brand B", "SourceLink": { "Url": "https://example.com/sample-2" }, "AdFormat": "Still", "Hook": "Two mice side by side, one circled in red.", "WhyItWorks": "Instant visual comparison. The spec is the headline.", "GloriousIdea": "Weight comparison chart vs the usual pro mice.", "AlreadyRun": "No", "ConceptTags": ["Comparison / versus competitor", "Feature callout (weight, sensor, switches, battery)"], "ExecutionTags": ["Text-heavy / typographic", "Product hero (clean studio shots)"], "SubmittedByName": "sample.user@example.com", "Created": "2026-09-04T15:00:00Z" },
-    { "ID": 3, "Title": "Sample Brand C", "SourceLink": { "Url": "https://example.com/sample-3" }, "AdFormat": "Video", "Hook": "Creator reacts to unboxing with a one-word review.", "WhyItWorks": "Feels like a friend's post, not an ad.", "GloriousIdea": "Send keyboards to three mid-size creators for reactions.", "AlreadyRun": "Yes, we've run something similar", "ConceptTags": ["Social proof (reviews, pro players, creators)", "Launch / reveal / hype"], "ExecutionTags": ["UGC / creator-led", "Native-feeling (looks like organic content, not an ad)"], "SubmittedByName": "sample.user@example.com", "Created": "2026-09-06T15:00:00Z" },
-    { "ID": 4, "Title": "Sample Brand D", "SourceLink": { "Url": "https://example.com/sample-4" }, "AdFormat": "Still", "Hook": "A meme template with the product swapped in.", "WhyItWorks": "Recognisable format. People share it.", "GloriousIdea": "Pick a gaming meme that fits the new switch.", "AlreadyRun": "No", "ConceptTags": ["Meme / internet culture", "Humor"], "ExecutionTags": ["Borrowed format (POV, split screen, trend template)"], "SubmittedByName": "sample.user@example.com", "Created": "2026-09-08T15:00:00Z" },
-    { "ID": 5, "Title": "Sample Glorious Ad 1", "SourceLink": { "Url": "https://example.com/sample-5" }, "AdFormat": "Still", "Hook": "Award medals around a keyboard.", "WhyItWorks": "Simple, but the text is hard to read.", "GloriousIdea": "We have used this already.", "AlreadyRun": "Yes, this is one of our own ads", "ConceptTags": "[\"Social proof (reviews, pro players, creators)\"]", "ExecutionTags": "[\"Product hero (clean studio shots)\",\"Purely visual (little or no copy)\"]", "SubmittedByName": "sample.user@example.com", "Created": "2026-09-10T15:00:00Z" },
-    { "ID": 6, "Title": "Sample Glorious Ad 2", "SourceLink": { "Url": "https://example.com/sample-6" }, "AdFormat": "Video", "Hook": "Odin appears over a glowing mouse pad.", "WhyItWorks": "Strong brand world. Unmistakably ours.", "GloriousIdea": "Extend the Odin look to a keyboard launch.", "AlreadyRun": "Yes, this is one of our own ads", "ConceptTags": ["Brand world / mythology (Odin and similar)", "Launch / reveal / hype"], "ExecutionTags": ["Motion graphics / animation"], "SubmittedByName": "sample.user@example.com", "Created": "2026-09-12T15:00:00Z" },
-    { "ID": 7, "Title": "Sample Brand E", "SourceLink": { "Url": "https://example.com/sample-7" }, "AdFormat": "Video", "Hook": "Gameplay clip, then a freeze frame on the mouse.", "WhyItWorks": "Shows the product in the place people care about.", "GloriousIdea": "Cut a clip from a pro player's session.", "AlreadyRun": "Not sure", "ConceptTags": ["Product demo / in-use", "Setup / aesthetic / lifestyle"], "ExecutionTags": ["Gameplay footage"], "SubmittedByName": "sample.user@example.com", "Created": "2026-09-14T15:00:00Z" },
-    { "ID": 8, "Title": "Sample Brand F", "SourceLink": { "Url": "https://example.com/sample-8" }, "AdFormat": "Still", "Hook": "Big price tag with a strike-through.", "WhyItWorks": "The offer is the whole message.", "GloriousIdea": "Bundle offer around launch week.", "AlreadyRun": "Yes, we've run something similar", "ConceptTags": ["Offer / sale / bundle", "Price / value"], "ExecutionTags": ["Text-heavy / typographic"], "SubmittedByName": "sample.user@example.com", "Created": "2026-09-16T15:00:00Z" },
-    { "ID": 9, "Title": "Sample Brand G", "SourceLink": { "Url": "https://example.com/sample-9" }, "AdFormat": "Video", "Hook": "Retro console boots up, then cuts to a modern keyboard.", "WhyItWorks": "Nostalgia gets attention before the product shows.", "GloriousIdea": "Retro intro for a limited colourway.", "AlreadyRun": "No", "ConceptTags": ["Nostalgia / retro", "Humor"], "ExecutionTags": ["Borrowed format (POV, split screen, trend template)", "Motion graphics / animation"], "SubmittedByName": "sample.user@example.com", "Created": "2026-09-18T15:00:00Z" },
-    { "ID": 10, "Title": "Sample Brand H", "SourceLink": { "Url": "https://example.com/sample-10" }, "AdFormat": "Video", "Hook": "Myth: heavier mice are more accurate. Test follows.", "WhyItWorks": "Opens a question people already argue about.", "GloriousIdea": "A myth-busting series on sensors and weight.", "AlreadyRun": "No", "ConceptTags": ["Educational / myth-busting"], "ExecutionTags": ["Product hero (clean studio shots)", "Text-heavy / typographic"], "SubmittedByName": "sample.user@example.com", "Created": "2026-09-20T15:00:00Z" },
-    { "ID": 11, "Title": "Sample Brand I", "SourceLink": { "Url": "https://example.com/sample-11" }, "AdFormat": "Still", "Hook": "Desk setup photo with soft lighting and one product circled.", "WhyItWorks": "People buy the setup, not just the product.", "GloriousIdea": "Customer setup spotlight each week.", "AlreadyRun": "Yes, we've run something similar", "ConceptTags": ["Setup / aesthetic / lifestyle"], "ExecutionTags": ["UGC / creator-led", "Purely visual (little or no copy)"], "SubmittedByName": "sample.user@example.com", "Created": "2026-09-22T15:00:00Z" },
-    { "ID": 12, "Title": "Sample Glorious Ad 3", "SourceLink": { "Url": "https://example.com/sample-12" }, "AdFormat": "Video", "Hook": "Pro player picks up the mouse and grins.", "WhyItWorks": "Authentic reaction, strong social proof.", "GloriousIdea": "Repeat with two more players.", "AlreadyRun": "Yes, this is one of our own ads", "ConceptTags": ["Social proof (reviews, pro players, creators)", "Product demo / in-use"], "ExecutionTags": ["UGC / creator-led", "Gameplay footage"], "SubmittedByName": "sample.user@example.com", "Created": "2026-09-24T15:00:00Z" }
+    {
+      "ID": 1,
+      "Title": "Sample Brand A",
+      "SourceLink": {
+        "Url": "https://example.com/sample-1"
+      },
+      "AdFormat": "Video",
+      "Hook": "Mouse is dropped from a desk, bounces, still tracks.",
+      "WhyItWorks": "Shows durability in the first two seconds with no talking.",
+      "GloriousIdea": "Same drop test with our lightest mouse.",
+      "AlreadyRun": "No",
+      "ConceptTags": [
+        "Product demo / in-use",
+        "Feature callout (weight, sensor, switches, battery)"
+      ],
+      "ExecutionTags": [
+        "Product hero (clean studio shots)",
+        "Motion graphics / animation"
+      ],
+      "SubmittedByName": "sample.user@example.com",
+      "Created": "2026-09-02T15:00:00Z",
+      "AdDestination": "DTC (Glorious website)"
+    },
+    {
+      "ID": 2,
+      "Title": "Sample Brand B",
+      "SourceLink": {
+        "Url": "https://example.com/sample-2"
+      },
+      "AdFormat": "Still",
+      "Hook": "Two mice side by side, one circled in red.",
+      "WhyItWorks": "Instant visual comparison. The spec is the headline.",
+      "GloriousIdea": "Weight comparison chart vs the usual pro mice.",
+      "AlreadyRun": "No",
+      "ConceptTags": [
+        "Comparison / versus competitor",
+        "Feature callout (weight, sensor, switches, battery)"
+      ],
+      "ExecutionTags": [
+        "Text-heavy / typographic",
+        "Product hero (clean studio shots)"
+      ],
+      "SubmittedByName": "sample.user@example.com",
+      "Created": "2026-09-04T15:00:00Z",
+      "AdDestination": "Amazon"
+    },
+    {
+      "ID": 3,
+      "Title": "Sample Brand C",
+      "SourceLink": {
+        "Url": "https://example.com/sample-3"
+      },
+      "AdFormat": "Video",
+      "Hook": "Creator reacts to unboxing with a one-word review.",
+      "WhyItWorks": "Feels like a friend's post, not an ad.",
+      "GloriousIdea": "Send keyboards to three mid-size creators for reactions.",
+      "AlreadyRun": "Yes, we've run something similar",
+      "ConceptTags": [
+        "Social proof (reviews, pro players, creators)",
+        "Launch / reveal / hype"
+      ],
+      "ExecutionTags": [
+        "UGC / creator-led",
+        "Native-feeling (looks like organic content, not an ad)"
+      ],
+      "SubmittedByName": "sample.user@example.com",
+      "Created": "2026-09-06T15:00:00Z",
+      "AdDestination": "Social only (no click-through)"
+    },
+    {
+      "ID": 4,
+      "Title": "Sample Brand D",
+      "SourceLink": {
+        "Url": "https://example.com/sample-4"
+      },
+      "AdFormat": "Still",
+      "Hook": "A meme template with the product swapped in.",
+      "WhyItWorks": "Recognisable format. People share it.",
+      "GloriousIdea": "Pick a gaming meme that fits the new switch.",
+      "AlreadyRun": "No",
+      "ConceptTags": [
+        "Meme / internet culture",
+        "Humor"
+      ],
+      "ExecutionTags": [
+        "Borrowed format (POV, split screen, trend template)"
+      ],
+      "SubmittedByName": "sample.user@example.com",
+      "Created": "2026-09-08T15:00:00Z",
+      "AdDestination": "Social only (no click-through)"
+    },
+    {
+      "ID": 5,
+      "Title": "Sample Glorious Ad 1",
+      "SourceLink": {
+        "Url": "https://example.com/sample-5"
+      },
+      "AdFormat": "Still",
+      "Hook": "Award medals around a keyboard.",
+      "WhyItWorks": "Simple, but the text is hard to read.",
+      "GloriousIdea": "We have used this already.",
+      "AlreadyRun": "Yes, this is one of our own ads",
+      "ConceptTags": "[\"Social proof (reviews, pro players, creators)\"]",
+      "ExecutionTags": "[\"Product hero (clean studio shots)\",\"Purely visual (little or no copy)\"]",
+      "SubmittedByName": "sample.user@example.com",
+      "Created": "2026-09-10T15:00:00Z",
+      "AdDestination": "DTC (Glorious website)"
+    },
+    {
+      "ID": 6,
+      "Title": "Sample Glorious Ad 2",
+      "SourceLink": {
+        "Url": "https://example.com/sample-6"
+      },
+      "AdFormat": "Video",
+      "Hook": "Odin appears over a glowing mouse pad.",
+      "WhyItWorks": "Strong brand world. Unmistakably ours.",
+      "GloriousIdea": "Extend the Odin look to a keyboard launch.",
+      "AlreadyRun": "Yes, this is one of our own ads",
+      "ConceptTags": [
+        "Brand world / mythology (Odin and similar)",
+        "Launch / reveal / hype"
+      ],
+      "ExecutionTags": [
+        "Motion graphics / animation"
+      ],
+      "SubmittedByName": "sample.user@example.com",
+      "Created": "2026-09-12T15:00:00Z",
+      "AdDestination": "DTC (Glorious website)"
+    },
+    {
+      "ID": 7,
+      "Title": "Sample Brand E",
+      "SourceLink": {
+        "Url": "https://example.com/sample-7"
+      },
+      "AdFormat": "Video",
+      "Hook": "Gameplay clip, then a freeze frame on the mouse.",
+      "WhyItWorks": "Shows the product in the place people care about.",
+      "GloriousIdea": "Cut a clip from a pro player's session.",
+      "AlreadyRun": "Not sure",
+      "ConceptTags": [
+        "Product demo / in-use",
+        "Setup / aesthetic / lifestyle"
+      ],
+      "ExecutionTags": [
+        "Gameplay footage"
+      ],
+      "SubmittedByName": "sample.user@example.com",
+      "Created": "2026-09-14T15:00:00Z",
+      "AdDestination": "Other retailer or marketplace"
+    },
+    {
+      "ID": 8,
+      "Title": "Sample Brand F",
+      "SourceLink": {
+        "Url": "https://example.com/sample-8"
+      },
+      "AdFormat": "Still",
+      "Hook": "Big price tag with a strike-through.",
+      "WhyItWorks": "The offer is the whole message.",
+      "GloriousIdea": "Bundle offer around launch week.",
+      "AlreadyRun": "Yes, we've run something similar",
+      "ConceptTags": [
+        "Offer / sale / bundle",
+        "Price / value"
+      ],
+      "ExecutionTags": [
+        "Text-heavy / typographic"
+      ],
+      "SubmittedByName": "sample.user@example.com",
+      "Created": "2026-09-16T15:00:00Z",
+      "AdDestination": "Amazon"
+    },
+    {
+      "ID": 9,
+      "Title": "Sample Brand G",
+      "SourceLink": {
+        "Url": "https://example.com/sample-9"
+      },
+      "AdFormat": "Video",
+      "Hook": "Retro console boots up, then cuts to a modern keyboard.",
+      "WhyItWorks": "Nostalgia gets attention before the product shows.",
+      "GloriousIdea": "Retro intro for a limited colourway.",
+      "AlreadyRun": "No",
+      "ConceptTags": [
+        "Nostalgia / retro",
+        "Humor"
+      ],
+      "ExecutionTags": [
+        "Borrowed format (POV, split screen, trend template)",
+        "Motion graphics / animation"
+      ],
+      "SubmittedByName": "sample.user@example.com",
+      "Created": "2026-09-18T15:00:00Z",
+      "AdDestination": "Social only (no click-through)"
+    },
+    {
+      "ID": 10,
+      "Title": "Sample Brand H",
+      "SourceLink": {
+        "Url": "https://example.com/sample-10"
+      },
+      "AdFormat": "Video",
+      "Hook": "Myth: heavier mice are more accurate. Test follows.",
+      "WhyItWorks": "Opens a question people already argue about.",
+      "GloriousIdea": "A myth-busting series on sensors and weight.",
+      "AlreadyRun": "No",
+      "ConceptTags": [
+        "Educational / myth-busting"
+      ],
+      "ExecutionTags": [
+        "Product hero (clean studio shots)",
+        "Text-heavy / typographic"
+      ],
+      "SubmittedByName": "sample.user@example.com",
+      "Created": "2026-09-20T15:00:00Z",
+      "AdDestination": "DTC (Glorious website)"
+    },
+    {
+      "ID": 11,
+      "Title": "Sample Brand I",
+      "SourceLink": {
+        "Url": "https://example.com/sample-11"
+      },
+      "AdFormat": "Still",
+      "Hook": "Desk setup photo with soft lighting and one product circled.",
+      "WhyItWorks": "People buy the setup, not just the product.",
+      "GloriousIdea": "Customer setup spotlight each week.",
+      "AlreadyRun": "Yes, we've run something similar",
+      "ConceptTags": [
+        "Setup / aesthetic / lifestyle"
+      ],
+      "ExecutionTags": [
+        "UGC / creator-led",
+        "Purely visual (little or no copy)"
+      ],
+      "SubmittedByName": "sample.user@example.com",
+      "Created": "2026-09-22T15:00:00Z",
+      "AdDestination": "Social only (no click-through)"
+    },
+    {
+      "ID": 12,
+      "Title": "Sample Glorious Ad 3",
+      "SourceLink": {
+        "Url": "https://example.com/sample-12"
+      },
+      "AdFormat": "Video",
+      "Hook": "Pro player picks up the mouse and grins.",
+      "WhyItWorks": "Authentic reaction, strong social proof.",
+      "GloriousIdea": "Repeat with two more players.",
+      "AlreadyRun": "Yes, this is one of our own ads",
+      "ConceptTags": [
+        "Social proof (reviews, pro players, creators)",
+        "Product demo / in-use"
+      ],
+      "ExecutionTags": [
+        "UGC / creator-led",
+        "Gameplay footage"
+      ],
+      "SubmittedByName": "sample.user@example.com",
+      "Created": "2026-09-24T15:00:00Z",
+      "AdDestination": "DTC (Glorious website)"
+    }
   ]
 }

@@ -98,10 +98,19 @@
 
   <div class="grid2">
     <section class="panel">
+      <h2>Where the ads send people</h2>
+      <p class="hint">Destination of each ad. Click a bar to filter.</p>
+      <div class="legend"><span><i style="background:var(--bar)"></i>Inspo collected</span><span><i style="background:var(--bar-own)"></i>Run by Glorious</span></div>
+      <div id="destChart"></div>
+    </section>
+    <section class="panel">
       <h2>Gaps</h2>
       <p class="hint">Worked out from the data in this page.</p>
       <div id="gaps"></div>
     </section>
+  </div>
+
+  <div class="grid2" style="grid-template-columns: 1fr;">
     <section class="panel">
       <h2>Claude's insights</h2>
       <p class="hint" id="insightHint">Suggestions on what to test next.</p>
@@ -129,9 +138,10 @@
 <script>
 const CONCEPTS = ["Meme / internet culture","Humor","Comparison / versus competitor","Social proof (reviews, pro players, creators)","Feature callout (weight, sensor, switches, battery)","Product demo / in-use","Launch / reveal / hype","Offer / sale / bundle","Nostalgia / retro","Educational / myth-busting","Brand world / mythology (Odin and similar)","Setup / aesthetic / lifestyle","Price / value"];
 const EXECUTIONS = ["Product hero (clean studio shots)","UGC / creator-led","Text-heavy / typographic","Purely visual (little or no copy)","Motion graphics / animation","Gameplay footage","Native-feeling (looks like organic content, not an ad)","Borrowed format (POV, split screen, trend template)"];
+const DESTS = ["DTC (Glorious website)","Amazon","Other retailer or marketplace","Social only (no click-through)","Not sure"];
 const RUN_LABEL = { own: "Our ad", similar: "We ran similar", no: "Not run", unsure: "Not sure", "": "Unknown" };
 
-const state = { q: "", format: "all", run: "all", concept: new Set(), exec: new Set() };
+const state = { q: "", format: "all", run: "all", concept: new Set(), exec: new Set(), dest: new Set() };
 let ADS = [];
 
 const $ = (id) => document.getElementById(id);
@@ -170,6 +180,7 @@ function normalize(i) {
     id: i.ID ?? i.Id ?? i.id, brand: i.Title || "Untitled", link: safeUrl(link),
     format: i.AdFormat || "", hook: i.Hook || "", why: i.WhyItWorks || "", idea: i.GloriousIdea || "",
     run: runKind(i.AlreadyRun), concept: parseList(i.ConceptTags), exec: parseList(i.ExecutionTags),
+    dest: i.AdDestination ? [String(i.AdDestination)] : [],
     shot: parseShot(i.ScreenshotLink),
     by: i.SubmittedByName || "", created: i.Created || ""
   };
@@ -180,6 +191,7 @@ function matches(a, skip) {
   if (state.run !== "all" && a.run !== state.run) return false;
   if (skip !== "concept" && state.concept.size && !a.concept.some((t) => state.concept.has(t))) return false;
   if (skip !== "exec" && state.exec.size && !a.exec.some((t) => state.exec.has(t))) return false;
+  if (skip !== "dest" && state.dest.size && !a.dest.some((t) => state.dest.has(t))) return false;
   if (state.q) {
     const hay = [a.brand, a.hook, a.why, a.idea, a.concept.join(" "), a.exec.join(" ")].join(" ").toLowerCase();
     if (!hay.includes(state.q.toLowerCase())) return false;
@@ -229,9 +241,15 @@ function renderGaps() {
   const uncollected = conceptStat.filter((s) => s.n === 0);
   const execStat = EXECUTIONS.map((t) => ({ t, n: ADS.filter((a) => a.exec.includes(t)).length }));
   const thinExec = execStat.filter((s) => s.n === 0);
+  const destStat = DESTS.map((t) => {
+    const all = ADS.filter((a) => a.dest.includes(t));
+    return { t, n: all.length, ours: all.filter(isOurs).length };
+  });
+  const destNeverRun = destStat.filter((s) => s.n > 0 && s.ours === 0 && s.t !== "Not sure");
   const li = (arr, fn) => (arr.length ? `<ul class="gap-list">${arr.map(fn).join("")}</ul>` : `<p class="hint">Nothing here.</p>`);
   $("gaps").innerHTML =
     `<b>Seen in inspo, never run by us</b>${li(neverRun, (s) => `<li>${esc(s.t)} <span class="sub">(${s.n} ad${s.n > 1 ? "s" : ""})</span></li>`)}
+     <b>Destinations seen in inspo, never used by us</b>${li(destNeverRun, (s) => `<li>${esc(s.t)} <span class="sub">(${s.n} ad${s.n > 1 ? "s" : ""})</span></li>`)}
      <b>No ads collected yet (concepts)</b>${li(uncollected, (s) => `<li>${esc(s.t)}</li>`)}
      <b>No ads collected yet (execution)</b>${li(thinExec, (s) => `<li>${esc(s.t)}</li>`)}`;
 }
@@ -245,6 +263,7 @@ function renderCards() {
       <h3>${esc(a.brand)}</h3>
       <div class="meta">
         ${a.format ? `<span class="badge">${esc(a.format)}</span>` : ""}
+        ${a.dest[0] ? `<span class="badge" title="Where the ad sends people">${esc(a.dest[0].split(" (")[0])}</span>` : ""}
         <span class="badge ${a.run}">${esc(RUN_LABEL[a.run])}</span>
       </div>
       ${a.hook ? `<div class="fld"><b>Hook:</b> ${esc(a.hook)}</div>` : ""}
@@ -261,12 +280,14 @@ function renderActive() {
   const chips = [];
   state.concept.forEach((t) => chips.push(["concept", t]));
   state.exec.forEach((t) => chips.push(["exec", t]));
+  state.dest.forEach((t) => chips.push(["dest", t]));
   $("activeFilters").innerHTML = chips.map(([k, t]) => `<button class="chip on" data-key="${k}" data-label="${esc(t)}" title="Remove filter">${esc(t.split(" (")[0])} ✕</button>`).join("");
 }
 
 function renderAll() {
   renderChart("conceptChart", CONCEPTS, "concept");
   renderChart("execChart", EXECUTIONS, "exec");
+  renderChart("destChart", DESTS, "dest");
   renderActive();
   renderCards();
 }
@@ -284,7 +305,7 @@ $("q").addEventListener("input", (e) => { state.q = e.target.value.trim(); rende
 $("fmt").addEventListener("change", (e) => { state.format = e.target.value; renderAll(); });
 $("run").addEventListener("change", (e) => { state.run = e.target.value; renderAll(); });
 $("clear").addEventListener("click", () => {
-  state.q = ""; state.format = "all"; state.run = "all"; state.concept.clear(); state.exec.clear();
+  state.q = ""; state.format = "all"; state.run = "all"; state.concept.clear(); state.exec.clear(); state.dest.clear();
   $("q").value = ""; $("fmt").value = "all"; $("run").value = "all"; renderAll();
 });
 
