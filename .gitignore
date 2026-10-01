@@ -2,3 +2,4 @@ node_modules/
 build/
 dist/
 .staticrypt.json
+private-data/

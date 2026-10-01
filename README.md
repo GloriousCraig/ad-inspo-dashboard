@@ -38,9 +38,10 @@ DASHBOARD_PASSPHRASE="a long passphrase" node build.mjs
 
 ## Plan for hosting
 
-1. Host on GitHub Pages.
-2. A Power Automate flow copies the list into `data/ads.json` when an ad is submitted.
-3. A build step embeds the data in the page and encrypts it with a shared passphrase, so the public site shows only a password prompt.
-4. Insights are generated on a schedule and written to `data/insights.json`.
+1. Host on GitHub Pages (this repo is public, so it must never contain real data).
+2. Real data lives in the **private** repo `GloriousCraig/ad-inspo-data` as `ads.json` (and optionally `insights.json`). It is refreshed on request by exporting the SharePoint list.
+3. The workflow checks out the private repo with the read-only secret `DATA_REPO_TOKEN`, copies the data over the sample files, and runs the build. If the private repo has no `ads.json`, the build uses the sample data.
+4. The build embeds the data in the page and encrypts it with the shared passphrase, so the public site shows only a password prompt.
+5. The workflow also runs once a day, so a refresh of the private repo is picked up without a push here.
 
-Pages on a free GitHub plan are public. The passphrase gate keeps casual visitors out but is not real sign-in, so keep confidential material out of the list.
+Pages on a free GitHub plan are public. The passphrase gate keeps casual visitors out but is not real sign-in, so keep confidential material out of the list. The `DATA_REPO_TOKEN` expires on the date chosen when it was created. After that the build will fail until a new token is saved.

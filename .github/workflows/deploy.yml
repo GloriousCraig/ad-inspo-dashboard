@@ -4,6 +4,8 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  schedule:
+    - cron: "17 11 * * *"
 
 permissions:
   contents: read
@@ -27,6 +29,24 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Check out the private data repo
+        uses: actions/checkout@v4
+        with:
+          repository: GloriousCraig/ad-inspo-data
+          token: ${{ secrets.DATA_REPO_TOKEN }}
+          path: private-data
+      - name: Use real data if present
+        run: |
+          if [ -f private-data/ads.json ]; then
+            cp private-data/ads.json data/ads.json
+            echo "Using real data from the private repo."
+          else
+            echo "No real data yet. Building with the sample data."
+          fi
+          if [ -f private-data/insights.json ]; then
+            cp private-data/insights.json data/insights.json
+            echo "Using insights from the private repo."
+          fi
       - name: Build encrypted page
         run: node build.mjs
         env:
