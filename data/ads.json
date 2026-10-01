@@ -25,7 +25,8 @@
       ],
       "SubmittedByName": "sample.user@example.com",
       "Created": "2026-09-02T15:00:00Z",
-      "AdDestination": "DTC (Glorious website)"
+      "AdDestination": "DTC (Glorious website)",
+      "AdCTA": "Learn more"
     },
     {
       "ID": 2,
@@ -48,7 +49,8 @@
       ],
       "SubmittedByName": "sample.user@example.com",
       "Created": "2026-09-04T15:00:00Z",
-      "AdDestination": "Amazon"
+      "AdDestination": "Amazon",
+      "AdCTA": "Shop now / Buy now"
     },
     {
       "ID": 3,
@@ -71,7 +73,8 @@
       ],
       "SubmittedByName": "sample.user@example.com",
       "Created": "2026-09-06T15:00:00Z",
-      "AdDestination": "Social only (no click-through)"
+      "AdDestination": "Social only (no click-through)",
+      "AdCTA": "Watch / Follow"
     },
     {
       "ID": 4,
@@ -93,7 +96,8 @@
       ],
       "SubmittedByName": "sample.user@example.com",
       "Created": "2026-09-08T15:00:00Z",
-      "AdDestination": "Social only (no click-through)"
+      "AdDestination": "Social only (no click-through)",
+      "AdCTA": "No CTA"
     },
     {
       "ID": 5,
@@ -110,7 +114,8 @@
       "ExecutionTags": "[\"Product hero (clean studio shots)\",\"Purely visual (little or no copy)\"]",
       "SubmittedByName": "sample.user@example.com",
       "Created": "2026-09-10T15:00:00Z",
-      "AdDestination": "DTC (Glorious website)"
+      "AdDestination": "DTC (Glorious website)",
+      "AdCTA": "Shop now / Buy now"
     },
     {
       "ID": 6,
@@ -132,7 +137,8 @@
       ],
       "SubmittedByName": "sample.user@example.com",
       "Created": "2026-09-12T15:00:00Z",
-      "AdDestination": "DTC (Glorious website)"
+      "AdDestination": "DTC (Glorious website)",
+      "AdCTA": "Bold claim (makes you want to find out more)"
     },
     {
       "ID": 7,
@@ -154,7 +160,8 @@
       ],
       "SubmittedByName": "sample.user@example.com",
       "Created": "2026-09-14T15:00:00Z",
-      "AdDestination": "Other retailer or marketplace"
+      "AdDestination": "Other retailer or marketplace",
+      "AdCTA": "Learn more"
     },
     {
       "ID": 8,
@@ -176,7 +183,8 @@
       ],
       "SubmittedByName": "sample.user@example.com",
       "Created": "2026-09-16T15:00:00Z",
-      "AdDestination": "Amazon"
+      "AdDestination": "Amazon",
+      "AdCTA": "Limited-time sale (urgency)"
     },
     {
       "ID": 9,
@@ -199,7 +207,8 @@
       ],
       "SubmittedByName": "sample.user@example.com",
       "Created": "2026-09-18T15:00:00Z",
-      "AdDestination": "Social only (no click-through)"
+      "AdDestination": "Social only (no click-through)",
+      "AdCTA": "No CTA"
     },
     {
       "ID": 10,
@@ -221,7 +230,8 @@
       ],
       "SubmittedByName": "sample.user@example.com",
       "Created": "2026-09-20T15:00:00Z",
-      "AdDestination": "DTC (Glorious website)"
+      "AdDestination": "DTC (Glorious website)",
+      "AdCTA": "Learn more"
     },
     {
       "ID": 11,
@@ -243,7 +253,8 @@
       ],
       "SubmittedByName": "sample.user@example.com",
       "Created": "2026-09-22T15:00:00Z",
-      "AdDestination": "Social only (no click-through)"
+      "AdDestination": "Social only (no click-through)",
+      "AdCTA": "No CTA"
     },
     {
       "ID": 12,
@@ -266,7 +277,8 @@
       ],
       "SubmittedByName": "sample.user@example.com",
       "Created": "2026-09-24T15:00:00Z",
-      "AdDestination": "DTC (Glorious website)"
+      "AdDestination": "DTC (Glorious website)",
+      "AdCTA": "Shop now / Buy now"
     }
   ]
 }
