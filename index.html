@@ -152,6 +152,17 @@ function runKind(text) {
   if (t.startsWith("not sure")) return "unsure";
   return "";
 }
+// ScreenshotLink holds the Forms upload info: a JSON array like [{"name":"a.jpg","link":"https://..."}].
+function parseShot(v) {
+  if (!v) return { link: "", name: "" };
+  try {
+    const arr = Array.isArray(v) ? v : JSON.parse(v);
+    const f = Array.isArray(arr) ? arr[0] : arr;
+    return { link: safeUrl(f && f.link), name: (f && f.name) || "" };
+  } catch {
+    return { link: safeUrl(String(v)), name: "" };
+  }
+}
 // Accepts the raw SharePoint list item shape (Title, SourceLink, ConceptTags, ...).
 function normalize(i) {
   const link = i.SourceLink && typeof i.SourceLink === "object" ? i.SourceLink.Url : i.SourceLink;
@@ -159,6 +170,7 @@ function normalize(i) {
     id: i.ID ?? i.Id ?? i.id, brand: i.Title || "Untitled", link: safeUrl(link),
     format: i.AdFormat || "", hook: i.Hook || "", why: i.WhyItWorks || "", idea: i.GloriousIdea || "",
     run: runKind(i.AlreadyRun), concept: parseList(i.ConceptTags), exec: parseList(i.ExecutionTags),
+    shot: parseShot(i.ScreenshotLink),
     by: i.SubmittedByName || "", created: i.Created || ""
   };
 }
@@ -240,6 +252,7 @@ function renderCards() {
       ${a.idea ? `<div class="fld"><b>For Glorious:</b> ${esc(a.idea)}</div>` : ""}
       <div class="tags">${[...a.concept, ...a.exec].map((t) => `<span class="tag">${esc(t.split(" (")[0])}</span>`).join("")}</div>
       ${a.link ? `<a href="${esc(a.link)}" target="_blank" rel="noopener noreferrer">Open source ad</a>` : ""}
+      ${a.shot.link ? `<a href="${esc(a.shot.link)}" target="_blank" rel="noopener noreferrer" title="${esc(a.shot.name)}">View screenshot</a>` : ""}
       <div class="foot">${esc(a.by)}${a.created ? " · " + esc(String(a.created).slice(0, 10)) : ""}</div>
     </article>`).join("");
 }
