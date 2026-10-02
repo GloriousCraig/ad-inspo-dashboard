@@ -64,7 +64,9 @@ const result = spawnSync(
     "--remember", "30",
     // Fixed salt (not secret) so "Remember me" survives rebuilds; a random salt per build invalidates it.
     "--salt", "decc8bec58dd1d3659f196f0fcc90246",
-    "--template-title", "Ad Inspo Library",
+    "--template-title", "Glorious | Ad Inspo Library",
+    "--template-color-primary", "#FFA40D",
+    "--template-color-secondary", "#1C1C1C",
     "--template-instructions", "Enter the team passphrase to view the dashboard.",
     "--template-button", "Open"
   ],

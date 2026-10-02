@@ -3,69 +3,70 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Ad Inspo Library</title>
+<title>Glorious | Ad Inspo Library</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Syne:wght@800&family=Work+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
+  /* Glorious brand colours: Pale Black / Black surfaces, Glorange accent, Sapphire Light for other brands. */
   :root {
-    --bg: #f6f6f4; --surface: #ffffff; --ink: #1c1c1e; --muted: #6b6b70; --line: #e3e3df;
-    --accent: #c8102e; --accent-ink: #ffffff; --own: #1f7a4d; --similar: #b7791f; --no: #8a8a90;
-    --bar: #3b5bdb; --bar-own: #1f7a4d; --warn-bg: #fff4d6; --warn-ink: #6b4b00; --chip: #efefeb;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --bg: #121214; --surface: #1c1c1f; --ink: #f1f1f3; --muted: #9a9aa2; --line: #2e2e33;
-      --accent: #ff4d63; --accent-ink: #121214; --own: #4cc38a; --similar: #e3b341; --no: #8a8a90;
-      --bar: #7c93ff; --bar-own: #4cc38a; --warn-bg: #3a3012; --warn-ink: #f2d98a; --chip: #2a2a2e;
-    }
+    color-scheme: dark;
+    --bg: #1c1c1c; --surface: #262626; --ink: #ffffff; --muted: #b0b0b0; --line: #3a3a3a;
+    --accent: #ffa40d; --accent-ink: #1c1c1c; --own: #ffa40d; --similar: #c5b4e3; --no: #707070;
+    --bar: #56b7e6; --bar-own: #ffa40d; --warn-bg: #313131; --warn-ink: #fcd299; --chip: #313131;
   }
   * { box-sizing: border-box; }
-  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.45 "Space Grotesk", "Work Sans", system-ui, -apple-system, "Segoe UI", sans-serif; border-top: 4px solid var(--accent); }
   .wrap { max-width: 1280px; margin: 0 auto; padding: 0 16px 48px; }
-  header { padding: 24px 0 8px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px; }
-  h1 { font-size: 24px; margin: 0; }
+  header { padding: 22px 0 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 20px; border-bottom: 1px solid var(--line); margin-bottom: 8px; }
+  .logo { height: 44px; width: auto; display: block; }
+  h1, .section-title, .panel h2 { font-family: "Syne", "Space Grotesk", sans-serif; font-weight: 800; text-transform: uppercase; letter-spacing: .03em; }
+  h1 { font-size: 22px; margin: 0; }
   .sub { color: var(--muted); font-size: 13px; }
-  .banner { background: var(--warn-bg); color: var(--warn-ink); border-radius: 8px; padding: 10px 14px; margin: 12px 0; font-size: 14px; }
+  .banner { background: var(--warn-bg); color: var(--warn-ink); border-radius: 0; padding: 10px 14px; margin: 12px 0; font-size: 14px; }
   .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin: 12px 0 20px; }
-  .kpi, .panel, .card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+  .kpi, .panel, .card { background: var(--surface); border: 1px solid var(--line); border-radius: 0; }
   .kpi { padding: 14px 16px; }
   .kpi .n { font-size: 28px; font-weight: 650; }
   .kpi .l { color: var(--muted); font-size: 13px; }
   .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 16px; margin-bottom: 20px; }
   .panel { padding: 16px; }
-  .panel h2 { font-size: 16px; margin: 0 0 4px; }
+  .panel h2 { font-size: 14px; margin: 0 0 4px; color: var(--accent); }
   .panel .hint { color: var(--muted); font-size: 13px; margin: 0 0 12px; }
   .bar-row { display: grid; grid-template-columns: minmax(120px, 42%) 1fr 28px; align-items: center; gap: 8px; width: 100%; background: none; border: 0; padding: 3px 0; color: inherit; font: inherit; text-align: left; cursor: pointer; }
   .bar-row .lab { font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .bar-row .track { background: var(--chip); border-radius: 6px; height: 14px; display: flex; overflow: hidden; }
+  .bar-row .track { background: var(--chip); border-radius: 0; height: 14px; display: flex; overflow: hidden; }
   .bar-row .seg { height: 100%; }
   .bar-row .num { font-size: 13px; color: var(--muted); text-align: right; }
   .bar-row.active .lab { font-weight: 650; color: var(--accent); }
   .bar-row:focus-visible, .chip:focus-visible, select:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   .legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--muted); margin: 0 0 8px; }
-  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 0; margin-right: 5px; vertical-align: -1px; }
   .controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 4px 0 12px; }
-  input[type=search], select { background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; font: inherit; }
-  input[type=search] { flex: 1 1 240px; min-width: 0; }
-  button.clear { background: none; border: 1px solid var(--line); color: var(--ink); border-radius: 8px; padding: 8px 12px; cursor: pointer; font: inherit; }
+  input[type=search], select { background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 0; padding: 8px 10px; font: inherit; }
+  input[type=search] { flex: 1 1 140px; min-width: 0; }
+  button.clear { background: none; border: 1px solid var(--line); color: var(--ink); border-radius: 0; padding: 8px 12px; cursor: pointer; font: inherit; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+  button.clear:hover { border-color: var(--accent); color: var(--accent); }
   .active-filters { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
-  .chip { background: var(--chip); color: var(--ink); border: 0; border-radius: 999px; padding: 4px 10px; font-size: 12px; cursor: pointer; }
+  .chip { background: var(--chip); color: var(--ink); border: 0; border-radius: 0; padding: 4px 10px; font-size: 12px; cursor: pointer; }
   .chip.on { background: var(--accent); color: var(--accent-ink); }
   .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
   .card { padding: 14px; display: flex; flex-direction: column; gap: 8px; }
   .card h3 { margin: 0; font-size: 16px; }
   .meta { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
-  .badge { font-size: 11px; font-weight: 650; text-transform: uppercase; letter-spacing: .04em; padding: 2px 8px; border-radius: 999px; background: var(--chip); }
-  .badge.own { background: var(--own); color: #fff; }
-  .badge.similar { background: var(--similar); color: #fff; }
+  .badge { font-size: 11px; font-weight: 650; text-transform: uppercase; letter-spacing: .04em; padding: 2px 8px; border-radius: 0; background: var(--chip); }
+  .badge.own { background: var(--own); color: #1c1c1c; }
+  .badge.similar { background: var(--similar); color: #1c1c1c; }
   .badge.no { background: var(--no); color: #fff; }
   .card .fld { font-size: 13px; }
   .card .fld b { color: var(--muted); font-weight: 600; }
   .tags { display: flex; gap: 4px; flex-wrap: wrap; }
-  .tag { font-size: 11px; background: var(--chip); border-radius: 6px; padding: 2px 6px; }
-  .thumb { display: block; width: 100%; padding: 0; border: 0; border-radius: 8px; overflow: hidden; background: var(--chip); cursor: zoom-in; }
+  .tag { font-size: 11px; background: var(--chip); border-radius: 0; padding: 2px 6px; }
+  .thumb { display: block; width: 100%; padding: 0; border: 0; border-radius: 0; overflow: hidden; background: var(--chip); cursor: zoom-in; }
   .thumb img { display: block; width: 100%; max-height: 260px; object-fit: contain; }
   .lightbox { position: fixed; inset: 0; z-index: 50; background: rgba(0, 0, 0, .85); display: flex; align-items: center; justify-content: center; padding: 16px; cursor: zoom-out; }
   .lightbox[hidden] { display: none; }
-  .lightbox img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px; background: #fff; }
+  .lightbox img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 0; background: #fff; }
   .cards.images-only { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; align-items: start; }
   .images-only .card { padding: 6px; gap: 0; }
   .images-only .card:not(.noimg) > :not(.thumb) { display: none; }
@@ -91,6 +92,44 @@
 <body>
 <div class="wrap">
   <header>
+    <svg class="logo" role="img" aria-label="Glorious" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 796.32 314.88">
+  
+  <defs>
+    <style>
+      .st0 {
+        fill: #ffac27;
+      }
+
+      .st1 {
+        fill: #fffffe;
+      }
+    </style>
+  </defs>
+  <path class="st1" d="M150.15,129.88v-34.27c0-1.49-2.04-7.56-2.79-9.19-7.23-15.85-29.12-15-44-14.07-16.57,1.03-26.42,9.74-27.58,26.6,1.82,37.72-2.35,77.6,0,115.07.7,11.19,5.37,20.85,16.34,24.89,9.68,3.56,35.97,3.35,45.26-1.25,6.65-3.29,13.25-12.82,13.25-20.31v-68.3h-37.9v22.05h13.43v40.5c0,.68-1.36,3.65-1.91,4.32-2.76,3.31-11.1,3.01-15.14,2.65-4.82-.43-7.49-3.1-7.92-7.91l.13-109.18c.78-2.96,2-5,5.03-5.99s12.48-1.13,15.17.44c2.1,1.23,4.15,5.02,4.15,7.36v26.6h24.47ZM257.51,72.51c-15.9,1.42-24.81,11.09-25.83,26.91l.08,115.94c2.29,26.83,26.85,27.15,48.17,25.72,17.29-1.15,26.06-11.03,27.11-28.03,2.26-36.71-1.76-75.72,0-112.67-1.8-29.24-25.68-29.99-49.53-27.87ZM489.21,72.51c-19.64,1.61-25.92,12.81-26.79,31.23-1.75,37.07.92,75.9.56,113.07,3.5,25.62,26.07,25.62,47.21,24.28,20.67-1.31,27.2-12.5,28.07-31.87,1.66-36.96-.86-75.54-.56-112.59-2.61-25.75-28.16-25.78-48.49-24.12ZM721.49,133.24v-35.23c0-7.47-5.19-17.15-11.55-21.05-11.18-6.85-41.51-6.94-51.78,1.87-11.13,9.55-9.83,33.81-9.13,47.47,1.43,27.92,23.59,32.11,41.76,47.9,2.7,2.34,5.09,5.06,5.63,8.76.83,5.71.79,22.78.13,28.63-.9,7.93-10.75,8.71-16.89,6.81-2.93-.91-5.65-4.2-5.65-7.29v-35.71h-24.94c.46,11.61-.61,23.68-.02,35.25.92,18.05,7.94,29.12,27.1,30.43,22.13,1.52,44.05-.11,45.85-27.08.69-10.32,1.19-37.57-2.66-46.26-5.49-12.38-29.29-24.11-39.82-33.54-2.01-1.8-3.42-3.71-4.21-6.34-1.39-4.6-1.29-19.39-.81-24.58.82-8.8,8.93-10.57,16.4-8.26,2.93.91,5.65,4.2,5.65,7.29v30.91h24.94ZM191.88,73.81h-25.42v165.83h53.25v-23h-27.82V73.81ZM374.41,73.81h-49.17v165.83h25.9v-66.62h14.63c.74,0,4.23,1.19,5.01,1.7.94.62,3.38,3.8,3.38,4.77v60.15h25.9v-60.15c0-1.61-1.35-6.37-2.03-8.03-2.34-5.66-6.89-8.13-12.36-10.18,8.74-3.36,13.26-11.43,13.94-20.59.83-11.23.81-29.53,0-40.77-1.08-15.01-10.11-24.65-25.2-26.1ZM443.25,73.81h-24.94v165.83h24.94V73.81ZM581.41,73.81h-25.42v143.06c0,7.8,6.64,17.52,13.59,20.93,9.42,4.62,34.88,4.6,44.58.76,8.74-3.46,15.7-13.1,15.7-22.65V73.81h-25.42v137.79c0,.97-1.56,4.05-2.37,4.82-3.4,3.21-15.63,3.24-18.74-.5-.41-.49-1.91-3.45-1.91-3.84V73.81Z"/>
+  <path class="st1" d="M351.15,150.97v-54.64h15.59c.17,0,2.85.9,3.23,1.08,3.21,1.53,3.97,4.44,4.22,7.76.91,12.18-.68,25.53-.07,37.83-.02,3.5-3.87,7.96-7.38,7.96h-15.59Z"/>
+  <path class="st1" d="M494.94,95.01c2.72-.42,10.73-.45,13.08.6,2.65,1.18,4.13,3.93,4.31,6.72v108.78c-.2,3.97-3,7.01-6.95,7.44-6.27.67-16.68.97-17.03-7.44v-108.78c.24-3.91,2.74-6.72,6.59-7.32Z"/>
+  <g>
+    <g>
+      <g>
+        <path class="st0" d="M150.15,129.88h-24.47v-26.6c0-2.34-2.05-6.13-4.15-7.36-2.69-1.57-12.19-1.42-15.17-.44s-4.25,3.03-5.03,5.99l-.13,109.18c.43,4.8,3.1,7.48,7.92,7.91,4.04.36,12.37.66,15.14-2.65.56-.67,1.91-3.64,1.91-4.32v-40.5h-13.43v-22.05h37.9v68.3c0,7.49-6.6,17.02-13.25,20.31-9.29,4.6-35.59,4.81-45.26,1.25-10.97-4.04-15.64-13.7-16.34-24.89-2.35-37.46,1.82-77.35,0-115.07,1.16-16.86,11.01-25.57,27.58-26.6,14.88-.93,36.77-1.78,44,14.07.75,1.64,2.79,7.71,2.79,9.19v34.27Z"/>
+        <polygon class="st0" points="191.88 73.81 191.88 216.63 219.71 216.63 219.71 239.63 166.46 239.63 166.46 73.81 191.88 73.81"/>
+      </g>
+      <g>
+        <path class="st0" d="M374.41,73.81c15.09,1.45,24.12,11.09,25.2,26.1.81,11.25.83,29.54,0,40.77-.68,9.16-5.19,17.23-13.94,20.59,5.47,2.05,10.03,4.52,12.36,10.18.68,1.66,2.03,6.42,2.03,8.03v60.15h-25.9v-60.15c0-.97-2.44-4.15-3.38-4.77-.78-.51-4.27-1.7-5.01-1.7h-14.63v66.62h-25.9V73.81h49.17ZM351.15,150.97h15.59c3.52,0,7.37-4.46,7.38-7.96-.61-12.3.99-25.65.07-37.83-.25-3.32-1.01-6.24-4.22-7.76-.39-.18-3.06-1.08-3.23-1.08h-15.59v54.64Z"/>
+        <path class="st0" d="M257.51,72.51c23.85-2.12,47.73-1.37,49.53,27.87-1.76,36.95,2.26,75.96,0,112.67-1.05,17-9.82,26.88-27.11,28.03-21.32,1.42-45.88,1.11-48.17-25.72l-.08-115.94c1.02-15.82,9.93-25.5,25.83-26.91ZM263.72,95.01c-4.19.7-6.18,3.78-6.58,7.8v107.82c.45,3.06,1.19,5.45,4.13,6.89,3.15,1.54,12.67,1.56,15.86.15s3.9-4.23,4.47-7.52v-106.87c-.56-4.66-2.47-7.83-7.43-8.39-2.35-.26-8.16-.27-10.44.12Z"/>
+      </g>
+    </g>
+    <g>
+      <path class="st0" d="M489.21,72.51c20.33-1.66,45.88-1.63,48.49,24.12-.3,37.05,2.22,75.63.56,112.59-.87,19.37-7.4,30.56-28.07,31.87-21.15,1.34-43.71,1.34-47.21-24.28.36-37.17-2.31-76.01-.56-113.07.87-18.42,7.15-29.62,26.79-31.23ZM494.94,95.01c-3.85.6-6.35,3.41-6.59,7.32v108.78c.34,8.4,10.75,8.11,17.03,7.44,3.94-.42,6.74-3.46,6.95-7.44v-108.78c-.18-2.79-1.66-5.54-4.31-6.72-2.35-1.05-10.36-1.02-13.08-.6Z"/>
+      <g>
+        <path class="st0" d="M581.41,73.81v138.27c0,.39,1.5,3.34,1.91,3.84,3.11,3.74,15.34,3.7,18.74.5.82-.77,2.37-3.85,2.37-4.82V73.81h25.42v142.1c0,9.55-6.96,19.19-15.7,22.65-9.7,3.84-35.16,3.86-44.58-.76-6.95-3.41-13.59-13.13-13.59-20.93V73.81h25.42Z"/>
+        <path class="st0" d="M721.49,133.24h-24.94v-30.91c0-3.09-2.72-6.38-5.65-7.29-7.48-2.31-15.58-.55-16.4,8.26-.49,5.18-.58,19.98.81,24.58.79,2.63,2.2,4.53,4.21,6.34,10.53,9.43,34.33,21.16,39.82,33.54,3.85,8.69,3.35,35.94,2.66,46.26-1.8,26.97-23.72,28.6-45.85,27.08-19.16-1.31-26.18-12.39-27.1-30.43-.59-11.56.48-23.63.02-35.25h24.94v35.71c0,3.09,2.72,6.38,5.65,7.29,6.14,1.9,16,1.12,16.89-6.81.66-5.85.7-22.92-.13-28.63-.54-3.7-2.93-6.41-5.63-8.76-18.17-15.79-40.33-19.98-41.76-47.9-.7-13.66-2.01-37.92,9.13-47.47,10.27-8.81,40.59-8.72,51.78-1.87,6.36,3.9,11.55,13.58,11.55,21.05v35.23Z"/>
+      </g>
+    </g>
+    <rect class="st0" x="418.31" y="73.81" width="24.94" height="165.83"/>
+    <path class="st1" d="M263.72,95.01c2.28-.38,8.1-.38,10.44-.12,4.96.56,6.87,3.73,7.43,8.39v106.87c-.56,3.29-1.19,6.07-4.47,7.52s-12.71,1.39-15.86-.15c-2.94-1.44-3.68-3.83-4.13-6.89v-107.82c.4-4.02,2.4-7.1,6.58-7.8Z"/>
+  </g>
+</svg>
     <h1>Ad Inspo Library</h1>
     <span class="sub" id="gen"></span>
   </header>
