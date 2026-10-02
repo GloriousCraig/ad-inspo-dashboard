@@ -55,6 +55,7 @@
   .card h3 { margin: 0; font-size: 16px; }
   .meta { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
   .badge { font-size: 11px; font-weight: 650; text-transform: uppercase; letter-spacing: .04em; padding: 2px 8px; border-radius: 0; background: var(--chip); }
+  .clickhint { margin: 0 0 12px; padding: 10px 12px; border-left: 4px solid #FFA40D; background: var(--chip); font-size: 13px; }
   .badge.ai { background: transparent; border: 1px solid var(--muted, #888); }
   .badge.own { background: var(--own); color: #1c1c1c; }
   .badge.similar { background: var(--similar); color: #1c1c1c; }
@@ -144,6 +145,7 @@
   <div class="cards" id="cards"></div>
   </main>
   <aside class="side" aria-label="Charts">
+  <p class="clickhint"><b>Click any bar to filter the ads.</b> Click it again to clear. Combine bars across charts to narrow down.</p>
   <div class="grid2">
     <section class="panel">
       <h2>Production</h2>
