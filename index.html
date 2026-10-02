@@ -112,14 +112,14 @@
   <aside class="side" aria-label="Charts">
   <div class="grid2">
     <section class="panel">
-      <h2>Concept tags</h2>
-      <p class="hint">What the ad is saying or doing. Click a bar to filter.</p>
+      <h2>Production</h2>
+      <p class="hint">What the ad is: render, photo, UGC, launch film, lifestyle and so on. Click a bar to filter.</p>
       <div class="legend"><span><i style="background:var(--bar)"></i>Ads from other brands</span><span><i style="background:var(--bar-own)"></i>Glorious's own ads</span></div>
       <div id="conceptChart"></div>
     </section>
     <section class="panel">
-      <h2>Execution tags</h2>
-      <p class="hint">How the ad is made. Click a bar to filter.</p>
+      <h2>Text on screen</h2>
+      <p class="hint">What the words do: logo only, bold claim, offer, social proof and so on. Click a bar to filter.</p>
       <div class="legend"><span><i style="background:var(--bar)"></i>Ads from other brands</span><span><i style="background:var(--bar-own)"></i>Glorious's own ads</span></div>
       <div id="execChart"></div>
     </section>
@@ -159,8 +159,8 @@
 <div class="lightbox" id="lightbox" hidden role="dialog" aria-label="Screenshot" ><img id="lightboxImg" alt="Enlarged screenshot"></div>
 
 <script>
-const CONCEPTS = ["Meme / internet culture","Humor","Comparison / versus competitor","Social proof (reviews, pro players, creators)","Feature callout (weight, sensor, switches, battery)","Product demo / in-use","Launch / reveal / hype","Offer / sale / bundle","Nostalgia / retro","Educational / myth-busting","Brand world / mythology (Odin and similar)","Setup / aesthetic / lifestyle","Price / value"];
-const EXECUTIONS = ["Product hero (clean studio shots)","UGC / creator-led","Text-heavy / typographic","Purely visual (little or no copy)","Motion graphics / animation","Gameplay footage","Native-feeling (looks like organic content, not an ad)","Borrowed format (POV, split screen, trend template)"];
+const CONCEPTS = ["UGC / creator-style","Launch film / hero film","Unboxing","Lifestyle (people, rooms, real use)","On-model (a person using or wearing it)","Floating product (clean or gradient background)","3D render / CGI","Studio product photography","Setup / desk / battlestation shot","Gameplay footage","Animation / illustration","Motion graphics","Meme / internet-culture format","Native-looking (social post, review or screenshot format)"]; // Production: what the ad is
+const EXECUTIONS = ["No text, logo only","Product name / tagline only","Headline or bold claim","Feature or spec callout","Offer / sale / price","Buy-now call to action (shop now, buy now)","Urgency (limited time, selling out)","Social proof (review, award, pro player)","Comparison vs a competitor","Question or hook line","Meme caption / joke","Heavy copy (paragraph)"]; // Text on screen
 const DESTS = ["DTC (brand's own website)","Amazon","Other retailer or marketplace","Social only (no click-through)","Not sure"];
 const CTAS = ["Shop now / Buy now","Learn more","Pre-order / Join waitlist","Enter giveaway / Sign up","Watch / Follow","Limited-time sale (urgency)","Bold claim (makes you want to find out more)","Tagline / brand statement","No CTA","Other"];
 const RUN_LABEL = { own: "Our ad", similar: "We ran similar", no: "Not run", unsure: "Not sure", "": "Unknown" };
@@ -239,7 +239,7 @@ function renderKpis() {
     [total, "Ads collected"],
     [ours, "Glorious's own ads"],
     [total ? Math.round((video / total) * 100) + "%" : "0%", "Video (rest are stills)"],
-    [top ? top[0].split(" (")[0] : "None yet", top ? `Top concept (${top[1]} ads)` : "Top concept"]
+    [top ? top[0].split(" (")[0] : "None yet", top ? `Top production style (${top[1]} ads)` : "Top production style"]
   ];
   $("kpis").innerHTML = items.map(([n, l]) => `<div class="kpi"><div class="n">${esc(n)}</div><div class="l">${esc(l)}</div></div>`).join("");
 }
@@ -269,6 +269,7 @@ function renderGaps() {
   const uncollected = conceptStat.filter((s) => s.n === 0);
   const execStat = EXECUTIONS.map((t) => ({ t, n: ADS.filter((a) => a.exec.includes(t)).length }));
   const thinExec = execStat.filter((s) => s.n === 0);
+  const textNeverRun = EXECUTIONS.map((t) => { const all = ADS.filter((a) => a.exec.includes(t)); return { t, n: all.length, ours: all.filter(isOurs).length }; }).filter((s) => s.n > 0 && s.ours === 0);
   const destStat = DESTS.map((t) => {
     const all = ADS.filter((a) => a.dest.includes(t));
     return { t, n: all.length, ours: all.filter(isOurs).length };
@@ -281,11 +282,12 @@ function renderGaps() {
   const ctaNeverRun = ctaStat.filter((s) => s.n > 0 && s.ours === 0 && s.t !== "Other");
   const li = (arr, fn) => (arr.length ? `<ul class="gap-list">${arr.map(fn).join("")}</ul>` : `<p class="hint">Nothing here.</p>`);
   $("gaps").innerHTML =
-    `<b>Seen in inspo, never run by us</b>${li(neverRun, (s) => `<li>${esc(s.t)} <span class="sub">(${s.n} ad${s.n > 1 ? "s" : ""})</span></li>`)}
+    `<b>Production styles seen in inspo, never used by us</b>${li(neverRun, (s) => `<li>${esc(s.t)} <span class="sub">(${s.n} ad${s.n > 1 ? "s" : ""})</span></li>`)}
      <b>Destinations seen in inspo, never used by us</b>${li(destNeverRun, (s) => `<li>${esc(s.t)} <span class="sub">(${s.n} ad${s.n > 1 ? "s" : ""})</span></li>`)}
      <b>Calls to action seen in inspo, never used by us</b>${li(ctaNeverRun, (s) => `<li>${esc(s.t.split(" (")[0])} <span class="sub">(${s.n} ad${s.n > 1 ? "s" : ""})</span></li>`)}
-     <b>No ads collected yet (concepts)</b>${li(uncollected, (s) => `<li>${esc(s.t)}</li>`)}
-     <b>No ads collected yet (execution)</b>${li(thinExec, (s) => `<li>${esc(s.t)}</li>`)}`;
+     <b>Production styles with no ads collected yet</b>${li(uncollected, (s) => `<li>${esc(s.t)}</li>`)}
+     <b>Text styles seen in inspo, never used by us</b>${li(textNeverRun, (s) => `<li>${esc(s.t)} <span class="sub">(${s.n} ad${s.n > 1 ? "s" : ""})</span></li>`)}
+     <b>Text styles with no ads collected yet</b>${li(thinExec, (s) => `<li>${esc(s.t)}</li>`)}`;
 }
 
 function renderCards() {

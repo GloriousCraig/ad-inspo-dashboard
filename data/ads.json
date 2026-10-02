@@ -15,14 +15,8 @@
       "WhyItWorks": "Shows durability in the first two seconds with no talking.",
       "GloriousIdea": "Same drop test with our lightest mouse.",
       "AlreadyRun": "No",
-      "ConceptTags": [
-        "Product demo / in-use",
-        "Feature callout (weight, sensor, switches, battery)"
-      ],
-      "ExecutionTags": [
-        "Product hero (clean studio shots)",
-        "Motion graphics / animation"
-      ],
+      "ConceptTags": "[\"UGC / creator-style\"]",
+      "ExecutionTags": "[\"No text, logo only\",\"Social proof (review, award, pro player)\"]",
       "SubmittedByName": "sample.user@example.com",
       "Created": "2026-09-02T15:00:00Z",
       "AdDestination": "DTC (brand's own website)",
@@ -39,14 +33,8 @@
       "WhyItWorks": "Instant visual comparison. The spec is the headline.",
       "GloriousIdea": "Weight comparison chart vs the usual pro mice.",
       "AlreadyRun": "No",
-      "ConceptTags": [
-        "Comparison / versus competitor",
-        "Feature callout (weight, sensor, switches, battery)"
-      ],
-      "ExecutionTags": [
-        "Text-heavy / typographic",
-        "Product hero (clean studio shots)"
-      ],
+      "ConceptTags": "[\"Lifestyle (people, rooms, real use)\",\"Setup / desk / battlestation shot\"]",
+      "ExecutionTags": "[\"Headline or bold claim\"]",
       "SubmittedByName": "sample.user@example.com",
       "Created": "2026-09-04T15:00:00Z",
       "AdDestination": "Amazon",
@@ -63,14 +51,8 @@
       "WhyItWorks": "Feels like a friend's post, not an ad.",
       "GloriousIdea": "Send keyboards to three mid-size creators for reactions.",
       "AlreadyRun": "Yes, we've run something similar",
-      "ConceptTags": [
-        "Social proof (reviews, pro players, creators)",
-        "Launch / reveal / hype"
-      ],
-      "ExecutionTags": [
-        "UGC / creator-led",
-        "Native-feeling (looks like organic content, not an ad)"
-      ],
+      "ConceptTags": "[\"3D render / CGI\",\"Motion graphics\"]",
+      "ExecutionTags": "[\"Offer / sale / price\",\"Heavy copy (paragraph)\"]",
       "SubmittedByName": "sample.user@example.com",
       "Created": "2026-09-06T15:00:00Z",
       "AdDestination": "Social only (no click-through)",
@@ -87,13 +69,8 @@
       "WhyItWorks": "Recognisable format. People share it.",
       "GloriousIdea": "Pick a gaming meme that fits the new switch.",
       "AlreadyRun": "No",
-      "ConceptTags": [
-        "Meme / internet culture",
-        "Humor"
-      ],
-      "ExecutionTags": [
-        "Borrowed format (POV, split screen, trend template)"
-      ],
+      "ConceptTags": "[\"Gameplay footage\"]",
+      "ExecutionTags": "[\"Urgency (limited time, selling out)\"]",
       "SubmittedByName": "sample.user@example.com",
       "Created": "2026-09-08T15:00:00Z",
       "AdDestination": "Social only (no click-through)",
@@ -110,8 +87,8 @@
       "WhyItWorks": "Simple, but the text is hard to read.",
       "GloriousIdea": "We have used this already.",
       "AlreadyRun": "Yes, this is one of our own ads",
-      "ConceptTags": "[\"Social proof (reviews, pro players, creators)\"]",
-      "ExecutionTags": "[\"Product hero (clean studio shots)\",\"Purely visual (little or no copy)\"]",
+      "ConceptTags": "[\"Meme / internet-culture format\",\"Lifestyle (people, rooms, real use)\"]",
+      "ExecutionTags": "[\"Comparison vs a competitor\",\"Feature or spec callout\"]",
       "SubmittedByName": "sample.user@example.com",
       "Created": "2026-09-10T15:00:00Z",
       "AdDestination": "DTC (brand's own website)",
@@ -128,13 +105,8 @@
       "WhyItWorks": "Strong brand world. Unmistakably ours.",
       "GloriousIdea": "Extend the Odin look to a keyboard launch.",
       "AlreadyRun": "Yes, this is one of our own ads",
-      "ConceptTags": [
-        "Brand world / mythology (Odin and similar)",
-        "Launch / reveal / hype"
-      ],
-      "ExecutionTags": [
-        "Motion graphics / animation"
-      ],
+      "ConceptTags": "[\"Launch film / hero film\",\"3D render / CGI\"]",
+      "ExecutionTags": "[\"Meme caption / joke\"]",
       "SubmittedByName": "sample.user@example.com",
       "Created": "2026-09-12T15:00:00Z",
       "AdDestination": "DTC (brand's own website)",
@@ -151,13 +123,8 @@
       "WhyItWorks": "Shows the product in the place people care about.",
       "GloriousIdea": "Cut a clip from a pro player's session.",
       "AlreadyRun": "Not sure",
-      "ConceptTags": [
-        "Product demo / in-use",
-        "Setup / aesthetic / lifestyle"
-      ],
-      "ExecutionTags": [
-        "Gameplay footage"
-      ],
+      "ConceptTags": "[\"On-model (a person using or wearing it)\"]",
+      "ExecutionTags": "[\"No text, logo only\",\"Social proof (review, award, pro player)\"]",
       "SubmittedByName": "sample.user@example.com",
       "Created": "2026-09-14T15:00:00Z",
       "AdDestination": "Other retailer or marketplace",
@@ -174,13 +141,8 @@
       "WhyItWorks": "The offer is the whole message.",
       "GloriousIdea": "Bundle offer around launch week.",
       "AlreadyRun": "Yes, we've run something similar",
-      "ConceptTags": [
-        "Offer / sale / bundle",
-        "Price / value"
-      ],
-      "ExecutionTags": [
-        "Text-heavy / typographic"
-      ],
+      "ConceptTags": "[\"Studio product photography\",\"Meme / internet-culture format\"]",
+      "ExecutionTags": "[\"Headline or bold claim\"]",
       "SubmittedByName": "sample.user@example.com",
       "Created": "2026-09-16T15:00:00Z",
       "AdDestination": "Amazon",
@@ -197,14 +159,8 @@
       "WhyItWorks": "Nostalgia gets attention before the product shows.",
       "GloriousIdea": "Retro intro for a limited colourway.",
       "AlreadyRun": "No",
-      "ConceptTags": [
-        "Nostalgia / retro",
-        "Humor"
-      ],
-      "ExecutionTags": [
-        "Borrowed format (POV, split screen, trend template)",
-        "Motion graphics / animation"
-      ],
+      "ConceptTags": "[\"Animation / illustration\",\"Launch film / hero film\"]",
+      "ExecutionTags": "[\"Offer / sale / price\",\"Heavy copy (paragraph)\"]",
       "SubmittedByName": "sample.user@example.com",
       "Created": "2026-09-18T15:00:00Z",
       "AdDestination": "Social only (no click-through)",
@@ -221,13 +177,8 @@
       "WhyItWorks": "Opens a question people already argue about.",
       "GloriousIdea": "A myth-busting series on sensors and weight.",
       "AlreadyRun": "No",
-      "ConceptTags": [
-        "Educational / myth-busting"
-      ],
-      "ExecutionTags": [
-        "Product hero (clean studio shots)",
-        "Text-heavy / typographic"
-      ],
+      "ConceptTags": "[\"Native-looking (social post, review or screenshot format)\"]",
+      "ExecutionTags": "[\"Urgency (limited time, selling out)\"]",
       "SubmittedByName": "sample.user@example.com",
       "Created": "2026-09-20T15:00:00Z",
       "AdDestination": "DTC (brand's own website)",
@@ -244,13 +195,8 @@
       "WhyItWorks": "People buy the setup, not just the product.",
       "GloriousIdea": "Customer setup spotlight each week.",
       "AlreadyRun": "Yes, we've run something similar",
-      "ConceptTags": [
-        "Setup / aesthetic / lifestyle"
-      ],
-      "ExecutionTags": [
-        "UGC / creator-led",
-        "Purely visual (little or no copy)"
-      ],
+      "ConceptTags": "[\"Unboxing\",\"Studio product photography\"]",
+      "ExecutionTags": "[\"Comparison vs a competitor\",\"Feature or spec callout\"]",
       "SubmittedByName": "sample.user@example.com",
       "Created": "2026-09-22T15:00:00Z",
       "AdDestination": "Social only (no click-through)",
@@ -267,14 +213,8 @@
       "WhyItWorks": "Authentic reaction, strong social proof.",
       "GloriousIdea": "Repeat with two more players.",
       "AlreadyRun": "Yes, this is one of our own ads",
-      "ConceptTags": [
-        "Social proof (reviews, pro players, creators)",
-        "Product demo / in-use"
-      ],
-      "ExecutionTags": [
-        "UGC / creator-led",
-        "Gameplay footage"
-      ],
+      "ConceptTags": "[\"Floating product (clean or gradient background)\",\"Animation / illustration\"]",
+      "ExecutionTags": "[\"Meme caption / joke\"]",
       "SubmittedByName": "sample.user@example.com",
       "Created": "2026-09-24T15:00:00Z",
       "AdDestination": "DTC (brand's own website)",
