@@ -28,6 +28,10 @@
   h1, .section-title, .panel h2 { font-family: "Syne", "Space Grotesk", sans-serif; font-weight: 800; text-transform: uppercase; letter-spacing: .03em; }
   h1 { font-size: 22px; margin: 0; }
   .sub { color: var(--muted); font-size: 13px; }
+  #gen { color: #C0DF16; font-weight: 600; letter-spacing: .02em; animation: genPulse 3.2s ease-in-out infinite; }
+  #gen:empty { display: none; }
+  @keyframes genPulse { 0%,100% { opacity: .55; text-shadow: 0 0 0 rgba(192,223,22,0); } 50% { opacity: 1; text-shadow: 0 0 6px rgba(192,223,22,.85), 0 0 16px rgba(192,223,22,.55); } }
+  @media (prefers-reduced-motion: reduce) { #gen { animation: none; } }
   .banner { background: var(--warn-bg); color: var(--warn-ink); border-radius: 0; padding: 10px 14px; margin: 12px 0; font-size: 14px; }
   .kpis { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; margin: 12px 0 20px; }
   .kpis .kpi { flex: 1 1 170px; }
