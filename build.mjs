@@ -5,14 +5,11 @@ import { spawnSync } from "node:child_process";
 import sharp from "sharp";
 
 const passphrase = process.env.DASHBOARD_PASSPHRASE;
-if (process.env.DASHBOARD_PUBLIC === "true") {
-  // Temporary: publish without a passphrase. Remove DASHBOARD_PUBLIC from the workflow to re-lock.
-  console.warn("DASHBOARD_PUBLIC=true: building WITHOUT encryption. Anyone with the link can read the data.");
-} else if (!passphrase) {
+if (!passphrase) {
   console.error("DASHBOARD_PASSPHRASE is not set. Refusing to build an unencrypted page.");
   process.exit(1);
 }
-if (process.env.DASHBOARD_PUBLIC !== "true" && passphrase.length < 16) {
+if (passphrase.length < 16) {
   console.error("DASHBOARD_PASSPHRASE is shorter than 16 characters. Use a longer passphrase.");
   process.exit(1);
 }
@@ -56,13 +53,6 @@ rmSync("dist", { recursive: true, force: true });
 mkdirSync("build", { recursive: true });
 mkdirSync("dist", { recursive: true });
 writeFileSync("build/plain.html", html);
-
-if (process.env.DASHBOARD_PUBLIC === "true") {
-  writeFileSync("dist/index.html", html);
-  rmSync("build", { recursive: true, force: true });
-  console.log("Built dist/index.html (NOT encrypted).");
-  process.exit(0);
-}
 
 const result = spawnSync(
   process.execPath,
