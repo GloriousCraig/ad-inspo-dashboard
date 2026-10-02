@@ -132,12 +132,6 @@
       <div class="legend"><span><i style="background:var(--bar)"></i>Ads from other brands</span><span><i style="background:var(--bar-own)"></i>Glorious's own ads</span></div>
       <div id="destChart"></div>
     </section>
-    <section class="panel">
-      <h2>Calls to action</h2>
-      <p class="hint">How each ad asks for the click. Click a bar to filter.</p>
-      <div class="legend"><span><i style="background:var(--bar)"></i>Ads from other brands</span><span><i style="background:var(--bar-own)"></i>Glorious's own ads</span></div>
-      <div id="ctaChart"></div>
-    </section>
   </div>
 
   <div class="grid2">
@@ -275,16 +269,10 @@ function renderGaps() {
     return { t, n: all.length, ours: all.filter(isOurs).length };
   });
   const destNeverRun = destStat.filter((s) => s.n > 0 && s.ours === 0 && s.t !== "Not sure");
-  const ctaStat = CTAS.map((t) => {
-    const all = ADS.filter((a) => a.cta.includes(t));
-    return { t, n: all.length, ours: all.filter(isOurs).length };
-  });
-  const ctaNeverRun = ctaStat.filter((s) => s.n > 0 && s.ours === 0 && s.t !== "Other");
   const li = (arr, fn) => (arr.length ? `<ul class="gap-list">${arr.map(fn).join("")}</ul>` : `<p class="hint">Nothing here.</p>`);
   $("gaps").innerHTML =
     `<b>Production styles seen in inspo, never used by us</b>${li(neverRun, (s) => `<li>${esc(s.t)} <span class="sub">(${s.n} ad${s.n > 1 ? "s" : ""})</span></li>`)}
      <b>Destinations seen in inspo, never used by us</b>${li(destNeverRun, (s) => `<li>${esc(s.t)} <span class="sub">(${s.n} ad${s.n > 1 ? "s" : ""})</span></li>`)}
-     <b>Calls to action seen in inspo, never used by us</b>${li(ctaNeverRun, (s) => `<li>${esc(s.t.split(" (")[0])} <span class="sub">(${s.n} ad${s.n > 1 ? "s" : ""})</span></li>`)}
      <b>Production styles with no ads collected yet</b>${li(uncollected, (s) => `<li>${esc(s.t)}</li>`)}
      <b>Text styles seen in inspo, never used by us</b>${li(textNeverRun, (s) => `<li>${esc(s.t)} <span class="sub">(${s.n} ad${s.n > 1 ? "s" : ""})</span></li>`)}
      <b>Text styles with no ads collected yet</b>${li(thinExec, (s) => `<li>${esc(s.t)}</li>`)}`;
@@ -301,7 +289,6 @@ function renderCards() {
       <div class="meta">
         ${a.format ? `<span class="badge">${esc(a.format)}</span>` : ""}
         ${a.dest[0] ? `<span class="badge" title="Where the ad sends people">${esc(a.dest[0].split(" (")[0])}</span>` : ""}
-        ${a.cta[0] ? `<span class="badge" title="Call to action">CTA: ${esc(a.cta[0].split(" (")[0])}</span>` : ""}
         <span class="badge ${a.run}">${esc(RUN_LABEL[a.run])}</span>
       </div>
       ${a.hook ? `<div class="fld"><b>Hook:</b> ${esc(a.hook)}</div>` : ""}
@@ -327,7 +314,6 @@ function renderAll() {
   renderChart("conceptChart", CONCEPTS, "concept");
   renderChart("execChart", EXECUTIONS, "exec");
   renderChart("destChart", DESTS, "dest");
-  renderChart("ctaChart", CTAS, "cta");
   renderActive();
   renderCards();
 }
