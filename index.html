@@ -66,6 +66,11 @@
   .lightbox { position: fixed; inset: 0; z-index: 50; background: rgba(0, 0, 0, .85); display: flex; align-items: center; justify-content: center; padding: 16px; cursor: zoom-out; }
   .lightbox[hidden] { display: none; }
   .lightbox img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px; background: #fff; }
+  .cards.images-only { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; align-items: start; }
+  .images-only .card { padding: 6px; gap: 0; }
+  .images-only .card:not(.noimg) > :not(.thumb) { display: none; }
+  .images-only .card.noimg > :not(h3):not(.meta) { display: none; }
+  .images-only .thumb img { max-height: none; }
   .card a { color: var(--accent); font-size: 13px; word-break: break-all; }
   .foot { color: var(--muted); font-size: 12px; margin-top: auto; }
   .gap-list { margin: 0; padding-left: 18px; font-size: 14px; }
@@ -105,6 +110,7 @@
       <option value="other">Ads from other brands</option>
     </select>
     <button class="clear" id="clear">Clear filters</button>
+    <button class="clear" id="detailsBtn" aria-pressed="false">Show details</button>
   </div>
   <div class="active-filters" id="activeFilters"></div>
   <div class="cards" id="cards"></div>
@@ -283,8 +289,8 @@ function renderCards() {
   $("count").textContent = `(${list.length} of ${ADS.length})`;
   if (!list.length) { $("cards").innerHTML = `<div class="empty">No ads match these filters.</div>`; return; }
   $("cards").innerHTML = list.map((a) => `
-    <article class="card">
-      ${a.img ? `<button class="thumb" data-zoom="${esc(a.id)}" aria-label="Enlarge the screenshot for ${esc(a.brand)}"><img src="${a.img}" alt="Screenshot of the ${esc(a.brand)} ad" loading="lazy"></button>` : ""}
+    <article class="card${a.img ? "" : " noimg"}">
+      ${a.img ? `<button class="thumb" data-zoom="${esc(a.id)}" title="${esc(a.brand)}" aria-label="Enlarge the screenshot for ${esc(a.brand)}"><img src="${a.img}" alt="Screenshot of the ${esc(a.brand)} ad" loading="lazy"></button>` : ""}
       <h3>${esc(a.brand)}</h3>
       <div class="meta">
         ${a.format ? `<span class="badge">${esc(a.format)}</span>` : ""}
@@ -340,6 +346,19 @@ document.addEventListener("keydown", (e) => {
 $("q").addEventListener("input", (e) => { state.q = e.target.value.trim(); renderAll(); });
 $("fmt").addEventListener("change", (e) => { state.format = e.target.value; renderAll(); });
 $("run").addEventListener("change", (e) => { state.run = e.target.value; renderAll(); });
+let showDetails = false;
+try { showDetails = localStorage.getItem("adInspoDetails") === "1"; } catch {}
+function applyDetails() {
+  $("cards").classList.toggle("images-only", !showDetails);
+  $("detailsBtn").textContent = showDetails ? "Hide details" : "Show details";
+  $("detailsBtn").setAttribute("aria-pressed", String(showDetails));
+}
+$("detailsBtn").addEventListener("click", () => {
+  showDetails = !showDetails;
+  try { localStorage.setItem("adInspoDetails", showDetails ? "1" : "0"); } catch {}
+  applyDetails();
+});
+applyDetails();
 $("clear").addEventListener("click", () => {
   state.q = ""; state.format = "all"; state.run = "all"; state.concept.clear(); state.exec.clear(); state.dest.clear(); state.cta.clear();
   $("q").value = ""; $("fmt").value = "all"; $("run").value = "all"; renderAll();
