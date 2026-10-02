@@ -336,6 +336,13 @@ function renderGaps() {
      <b>Messaging styles with no ads collected yet</b>${li(thinExec, (s) => `<li>${esc(s.t)}</li>`)}`;
 }
 
+function openNotePopup(url) {
+  const w = 520, hgt = 640;
+  const left = Math.max(0, Math.round((window.screenX || 0) + (window.outerWidth - w) / 2));
+  const top = Math.max(0, Math.round((window.screenY || 0) + (window.outerHeight - hgt) / 2));
+  const win = window.open(url, "adNote", "popup=yes,width=" + w + ",height=" + hgt + ",left=" + left + ",top=" + top + ",noopener");
+  if (!win) window.open(url, "_blank", "noopener");
+}
 let introPlayed = false;
 function renderCards() {
   const list = ADS.filter((a) => matches(a)).sort((a, b) => String(b.created).localeCompare(String(a.created)));
@@ -454,7 +461,7 @@ function toggle(key, label) {
 }
 document.addEventListener("click", (e) => {
   const nb = e.target.closest("[data-note]");
-  if (nb) { e.preventDefault(); e.stopPropagation(); if (NOTE_FORM) window.open(NOTE_FORM + encodeURIComponent(nb.dataset.note), "_blank", "noopener"); else alert("The note form is not set up yet."); return; }
+  if (nb) { e.preventDefault(); e.stopPropagation(); if (NOTE_FORM) openNotePopup(NOTE_FORM + encodeURIComponent(nb.dataset.note)); else alert("The note form is not set up yet."); return; }
   const cp = e.target.closest("[data-copy]");
   if (cp) {
     const ad = ADS.find((a) => String(a.id) === cp.dataset.id);
