@@ -219,6 +219,7 @@ const RUN_LABEL = { own: "Our ad", similar: "We ran similar", no: "Not run", uns
 const state = { q: "", format: "all", run: "all", concept: new Set(), exec: new Set(), dest: new Set(), cta: new Set() };
 let ADS = [];
 let NOTE_FORM = "";
+let EDIT_FORM = "";
 
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -336,8 +337,7 @@ function renderGaps() {
      <b>Messaging styles with no ads collected yet</b>${li(thinExec, (s) => `<li>${esc(s.t)}</li>`)}`;
 }
 
-function openNotePopup(url) {
-  const w = 520, hgt = 640;
+function openNotePopup(url, w = 520, hgt = 640) {
   const left = Math.max(0, Math.round((window.screenX || 0) + (window.outerWidth - w) / 2));
   const top = Math.max(0, Math.round((window.screenY || 0) + (window.outerHeight - hgt) / 2));
   const win = window.open(url, "adNote", "popup=yes,width=" + w + ",height=" + hgt + ",left=" + left + ",top=" + top + ",noopener");
@@ -353,7 +353,7 @@ function renderCards() {
   if (!introPlayed) { introPlayed = true; setTimeout(() => box.classList.remove("enter"), 2600); }
   $("cards").innerHTML = list.map((a, i) => `
     <article class="card${a.img ? "" : " noimg"}" id="ad-${esc(a.id)}" style="--i:${i}">
-      <div class="actions"><button type="button" data-note="${esc(a.id)}" title="Add a team note to this ad">Add note</button><button type="button" data-copy="ad" data-id="${esc(a.id)}" title="Copy a link to this ad on the dashboard">Copy link</button>${a.link ? `<button type="button" data-copy="src" data-id="${esc(a.id)}" title="Copy the link to the original ad">Copy source</button>` : ""}</div>
+      <div class="actions"><button type="button" data-edit="${esc(a.id)}" title="Edit this ad's details in SharePoint">Edit</button><button type="button" data-note="${esc(a.id)}" title="Add a team note to this ad">Add note</button><button type="button" data-copy="ad" data-id="${esc(a.id)}" title="Copy a link to this ad on the dashboard">Copy link</button>${a.link ? `<button type="button" data-copy="src" data-id="${esc(a.id)}" title="Copy the link to the original ad">Copy source</button>` : ""}</div>
       ${a.img ? (a.link ? `<a class="thumb" href="${esc(a.link)}" target="_blank" rel="noopener noreferrer" data-zoom="${esc(a.id)}" title="${esc(a.brand)} (right-click to copy the source link)" aria-label="Enlarge the screenshot for ${esc(a.brand)}"><img src="${a.img}" alt="Screenshot of the ${esc(a.brand)} ad" loading="lazy"></a>` : `<button class="thumb" data-zoom="${esc(a.id)}" title="${esc(a.brand)}" aria-label="Enlarge the screenshot for ${esc(a.brand)}"><img src="${a.img}" alt="Screenshot of the ${esc(a.brand)} ad" loading="lazy"></button>`) : ""}
       <h3${a.img ? "" : ` data-zoom="${esc(a.id)}" style="cursor:pointer"`}>${esc(a.brand)}</h3>
       <div class="meta">
@@ -406,6 +406,7 @@ function detailBlock(a) {
     ${a.notes ? `<div class="fld notes"><b>Team notes</b>${esc(a.notes)}</div>` : ""}
     ${tags ? `<div class="tags">${tags}</div>` : ""}
     <div class="lb-actions">
+      <button type="button" class="clear" data-edit="${esc(a.id)}">Edit details</button>
       <button type="button" class="clear" data-note="${esc(a.id)}">Add note</button>
       <button type="button" class="clear" data-copy="ad" data-id="${esc(a.id)}">Copy link</button>
       ${a.link ? `<button type="button" class="clear" data-copy="src" data-id="${esc(a.id)}">Copy source</button>` : ""}
@@ -460,6 +461,8 @@ function toggle(key, label) {
   renderAll();
 }
 document.addEventListener("click", (e) => {
+  const eb = e.target.closest("[data-edit]");
+  if (eb) { e.preventDefault(); e.stopPropagation(); if (EDIT_FORM) openNotePopup(EDIT_FORM + encodeURIComponent(eb.dataset.edit), 820, 760); else alert("The edit link is not set up yet."); return; }
   const nb = e.target.closest("[data-note]");
   if (nb) { e.preventDefault(); e.stopPropagation(); if (NOTE_FORM) openNotePopup(NOTE_FORM + encodeURIComponent(nb.dataset.note)); else alert("The note form is not set up yet."); return; }
   const cp = e.target.closest("[data-copy]");
@@ -544,6 +547,7 @@ async function load() {
   renderKpis(); renderGaps(); renderAll(); openFromHash();
   try {
     const ins = await getJson("data/insights.json", "insights");
+    EDIT_FORM = typeof ins.editForm === "string" && ins.editForm.startsWith("https://") && ins.editForm.includes(".sharepoint.com/") ? ins.editForm : "";
     NOTE_FORM = typeof ins.noteForm === "string" && ins.noteForm.startsWith("https://forms.") ? ins.noteForm : "";
     $("insightHint").textContent = ins.sample ? "Sample insights, made up to show the layout." : "Suggestions on what to test next." + (ins.generated ? " Generated " + String(ins.generated).slice(0, 10) + "." : "");
     $("insights").innerHTML = (ins.items || []).map((i) => `<div class="insight"><b>${esc(i.title)}</b>${esc(i.body)}</div>`).join("") || `<p class="hint">No insights yet.</p>`;
