@@ -57,14 +57,24 @@
   .badge { font-size: 11px; font-weight: 650; text-transform: uppercase; letter-spacing: .04em; padding: 2px 8px; border-radius: 0; background: var(--chip); }
   .clickhint { margin: 0 0 12px; padding: 10px 12px; border-left: 4px solid #FFA40D; background: var(--chip); font-size: 13px; }
   .notes { white-space: pre-line; border-left: 3px solid #FFA40D; padding-left: 8px; }
-  .kpi-btn { border: 0; cursor: pointer; text-align: left; font: inherit; color: #1c1c1c; }
-  .kpi-btn.gold { background: #FFA40D; }
-  .kpi-btn.blue { background: #56B7E6; }
-  .kpi-btn .n { font-size: 20px; line-height: 1.3; }
-  .kpi-btn .l { color: #1c1c1c; font-weight: 600; }
-  .kpi-btn:hover { filter: brightness(1.08); }
+  .kpi-btn { display: flex; align-items: center; gap: 14px; border: 0; cursor: pointer; text-align: left; font: inherit; color: #1c1c1c; border-radius: 999px; padding: 12px 22px 12px 14px; position: relative; overflow: hidden;
+    transition: transform .2s ease, box-shadow .25s ease, filter .2s; }
+  .kpi-btn::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(180deg, rgba(255,255,255,.38), rgba(255,255,255,0) 55%); pointer-events: none; }
+  .kpi-btn.gold { background: linear-gradient(135deg, #FFC24A, #FFA40D 55%, #E58F00); box-shadow: 0 6px 20px rgba(255,164,13,.35), inset 0 -3px 0 rgba(0,0,0,.12); }
+  .kpi-btn.blue { background: linear-gradient(135deg, #8DD3F5, #56B7E6 55%, #3B9FD0); box-shadow: 0 6px 20px rgba(86,183,230,.35), inset 0 -3px 0 rgba(0,0,0,.12); }
+  .kpi-btn:hover { transform: translateY(-3px) scale(1.02); filter: brightness(1.06); }
+  .kpi-btn:active { transform: translateY(0) scale(.99); }
+  .kpi-btn .ico { flex: none; width: 42px; height: 42px; border-radius: 50%; background: #1c1c1c; display: grid; place-items: center; font-size: 20px; line-height: 1; box-shadow: 0 2px 6px rgba(0,0,0,.35); }
+  .kpi-btn.gold .ico { color: #FFA40D; }
+  .kpi-btn.blue .ico { color: #56B7E6; }
+  .kpi-btn .txt .n { font-size: 17px; font-weight: 700; line-height: 1.2; }
+  .kpi-btn .txt .l { color: #1c1c1c; font-weight: 600; font-size: 12px; opacity: .85; }
   .kpi-btn .chev { display: inline-block; transition: transform .3s; }
   .kpi-btn[aria-expanded="true"] .chev { transform: rotate(180deg); }
+  .kpi-btn[aria-expanded="true"] { box-shadow: 0 0 0 3px rgba(255,255,255,.25), 0 6px 20px rgba(0,0,0,.35); }
+  @keyframes btnPulse { 0%,100% { box-shadow: 0 6px 20px rgba(255,164,13,.35), inset 0 -3px 0 rgba(0,0,0,.12); } 50% { box-shadow: 0 6px 28px rgba(255,164,13,.65), inset 0 -3px 0 rgba(0,0,0,.12); } }
+  .kpi-btn.gold[aria-expanded="false"] { animation: btnPulse 3s ease-in-out infinite; }
+  @media (prefers-reduced-motion: reduce) { .kpi-btn, .kpi-btn.gold[aria-expanded="false"] { animation: none; transition: none; } }
   .drawer-bar { display: flex; gap: 10px; flex-wrap: wrap; margin: 0 0 12px; }
   .drawer-btn { font: inherit; font-weight: 700; letter-spacing: .02em; padding: 10px 18px; border: 0; border-radius: 0; cursor: pointer; color: #1c1c1c; display: inline-flex; gap: 10px; align-items: center; }
   .drawer-btn.gold { background: #FFA40D; }
@@ -300,8 +310,8 @@ function renderKpis() {
     [top ? top[0].split(" (")[0] : "None yet", top ? `Top production style (${top[1]} ads)` : "Top production style"]
   ];
   $("kpis").innerHTML = items.map(([n, l]) => `<div class="kpi"><div class="n">${esc(n)}</div><div class="l">${esc(l)}</div></div>`).join("") +
-    `<button type="button" class="kpi kpi-btn gold" data-drawer="drawerInsights" aria-expanded="false" aria-controls="drawerInsights"><div class="n">Claude's insights</div><div class="l">Click to open <span class="chev" aria-hidden="true">&#9662;</span></div></button>` +
-    `<button type="button" class="kpi kpi-btn blue" data-drawer="drawerGaps" aria-expanded="false" aria-controls="drawerGaps"><div class="n">Gaps</div><div class="l">Click to open <span class="chev" aria-hidden="true">&#9662;</span></div></button>`;
+    `<button type="button" class="kpi kpi-btn gold" data-drawer="drawerInsights" aria-expanded="false" aria-controls="drawerInsights"><span class="ico" aria-hidden="true">&#10022;</span><span class="txt"><div class="n">Claude's insights</div><div class="l">Click to open <span class="chev" aria-hidden="true">&#9662;</span></div></span></button>` +
+    `<button type="button" class="kpi kpi-btn blue" data-drawer="drawerGaps" aria-expanded="false" aria-controls="drawerGaps"><span class="ico" aria-hidden="true">&#9678;</span><span class="txt"><div class="n">Gaps</div><div class="l">Click to open <span class="chev" aria-hidden="true">&#9662;</span></div></span></button>`;
 }
 
 function renderChart(el, labels, key) {
