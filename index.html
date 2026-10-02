@@ -93,6 +93,9 @@
   .images-only .card.noimg > :not(h3):not(.meta) { display: none; }
   .images-only .thumb img { max-height: none; }
   .card { position: relative; }
+  @keyframes slideIn { from { opacity: 0; transform: translateY(28px) scale(.97); } to { opacity: 1; transform: none; } }
+  .enter .card { animation: slideIn .55s cubic-bezier(.2,.8,.2,1) both; animation-delay: calc(min(var(--i, 0), 30) * 45ms); }
+  @media (prefers-reduced-motion: reduce) { .enter .card { animation: none; } }
   .actions { position: absolute; top: 10px; right: 10px; display: flex; gap: 4px; opacity: 0; transition: opacity .12s; z-index: 2; }
   .card:hover .actions, .card:focus-within .actions { opacity: 1; }
   @media (hover: none) { .actions { opacity: 1; } }
@@ -316,16 +319,20 @@ function renderGaps() {
     `<b>Production styles seen in inspo, never used by us</b>${li(neverRun, (s) => `<li>${esc(s.t)} <span class="sub">(${s.n} ad${s.n > 1 ? "s" : ""})</span></li>`)}
      <b>Destinations seen in inspo, never used by us</b>${li(destNeverRun, (s) => `<li>${esc(s.t)} <span class="sub">(${s.n} ad${s.n > 1 ? "s" : ""})</span></li>`)}
      <b>Production styles with no ads collected yet</b>${li(uncollected, (s) => `<li>${esc(s.t)}</li>`)}
-     <b>Text styles seen in inspo, never used by us</b>${li(textNeverRun, (s) => `<li>${esc(s.t)} <span class="sub">(${s.n} ad${s.n > 1 ? "s" : ""})</span></li>`)}
-     <b>Text styles with no ads collected yet</b>${li(thinExec, (s) => `<li>${esc(s.t)}</li>`)}`;
+     <b>Messaging styles seen in inspo, never used by us</b>${li(textNeverRun, (s) => `<li>${esc(s.t)} <span class="sub">(${s.n} ad${s.n > 1 ? "s" : ""})</span></li>`)}
+     <b>Messaging styles with no ads collected yet</b>${li(thinExec, (s) => `<li>${esc(s.t)}</li>`)}`;
 }
 
+let introPlayed = false;
 function renderCards() {
   const list = ADS.filter((a) => matches(a)).sort((a, b) => String(b.created).localeCompare(String(a.created)));
   $("count").textContent = `(${list.length} of ${ADS.length})`;
   if (!list.length) { $("cards").innerHTML = `<div class="empty">No ads match these filters.</div>`; return; }
-  $("cards").innerHTML = list.map((a) => `
-    <article class="card${a.img ? "" : " noimg"}" id="ad-${esc(a.id)}">
+  const box = $("cards");
+  box.classList.toggle("enter", !introPlayed);
+  if (!introPlayed) { introPlayed = true; setTimeout(() => box.classList.remove("enter"), 2600); }
+  $("cards").innerHTML = list.map((a, i) => `
+    <article class="card${a.img ? "" : " noimg"}" id="ad-${esc(a.id)}" style="--i:${i}">
       <div class="actions"><button type="button" data-copy="ad" data-id="${esc(a.id)}" title="Copy a link to this ad on the dashboard">Copy link</button>${a.link ? `<button type="button" data-copy="src" data-id="${esc(a.id)}" title="Copy the link to the original ad">Copy source</button>` : ""}</div>
       ${a.img ? (a.link ? `<a class="thumb" href="${esc(a.link)}" target="_blank" rel="noopener noreferrer" data-zoom="${esc(a.id)}" title="${esc(a.brand)} (right-click to copy the source link)" aria-label="Enlarge the screenshot for ${esc(a.brand)}"><img src="${a.img}" alt="Screenshot of the ${esc(a.brand)} ad" loading="lazy"></a>` : `<button class="thumb" data-zoom="${esc(a.id)}" title="${esc(a.brand)}" aria-label="Enlarge the screenshot for ${esc(a.brand)}"><img src="${a.img}" alt="Screenshot of the ${esc(a.brand)} ad" loading="lazy"></button>`) : ""}
       <h3${a.img ? "" : ` data-zoom="${esc(a.id)}" style="cursor:pointer"`}>${esc(a.brand)}</h3>
