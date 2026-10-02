@@ -57,6 +57,22 @@
   .badge { font-size: 11px; font-weight: 650; text-transform: uppercase; letter-spacing: .04em; padding: 2px 8px; border-radius: 0; background: var(--chip); }
   .clickhint { margin: 0 0 12px; padding: 10px 12px; border-left: 4px solid #FFA40D; background: var(--chip); font-size: 13px; }
   .notes { white-space: pre-line; border-left: 3px solid #FFA40D; padding-left: 8px; }
+  .drawer-bar { display: flex; gap: 10px; flex-wrap: wrap; margin: 0 0 12px; }
+  .drawer-btn { font: inherit; font-weight: 700; letter-spacing: .02em; padding: 10px 18px; border: 0; border-radius: 0; cursor: pointer; color: #1c1c1c; display: inline-flex; gap: 10px; align-items: center; }
+  .drawer-btn.gold { background: #FFA40D; }
+  .drawer-btn.blue { background: #56B7E6; }
+  .drawer-btn:hover { filter: brightness(1.08); }
+  .drawer-btn .chev { display: inline-block; transition: transform .3s; }
+  .drawer-btn[aria-expanded="true"] .chev { transform: rotate(180deg); }
+  .drawer { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .45s cubic-bezier(.2,.8,.2,1), margin .45s; margin: 0; }
+  .drawer.open { grid-template-rows: 1fr; margin: 0 0 16px; }
+  .drawer-in { overflow: hidden; min-height: 0; background: var(--surface); border: 0 solid var(--line); border-top-width: 0; }
+  .drawer.open .drawer-in { padding: 14px 16px; border-width: 1px; border-top-width: 4px; }
+  .drawer.gold.open .drawer-in { border-top-color: #FFA40D; }
+  .drawer.blue.open .drawer-in { border-top-color: #56B7E6; }
+  .insights-grid { display: grid; grid-template-columns: 1fr; gap: 4px 28px; }
+  @media (min-width: 900px) { .insights-grid { grid-template-columns: 1fr 1fr; } }
+  @media (prefers-reduced-motion: reduce) { .drawer, .drawer-btn .chev { transition: none; } }
   .badge.ai { background: transparent; border: 1px solid var(--muted, #888); }
   .badge.own { background: var(--own); color: #1c1c1c; }
   .badge.similar { background: var(--similar); color: #1c1c1c; }
@@ -131,6 +147,13 @@
 
   <div class="kpis" id="kpis"></div>
 
+  <div class="drawer-bar">
+    <button type="button" class="drawer-btn gold" id="btnInsights" aria-expanded="false" aria-controls="drawerInsights">Claude's insights <span class="chev" aria-hidden="true">&#9662;</span></button>
+    <button type="button" class="drawer-btn blue" id="btnGaps" aria-expanded="false" aria-controls="drawerGaps">Gaps <span class="chev" aria-hidden="true">&#9662;</span></button>
+  </div>
+  <section class="drawer gold" id="drawerInsights" aria-label="Claude's insights"><div class="drawer-in"><p class="hint" id="insightHint">Suggestions on what to test next.</p><div class="insights-grid" id="insights"></div></div></section>
+  <section class="drawer blue" id="drawerGaps" aria-label="Gaps"><div class="drawer-in"><p class="hint">Worked out from the data in this page.</p><div id="gaps"></div></div></section>
+
   <div class="layout">
   <main class="browse">
   <h2 class="section-title">Browse ads <span class="sub" id="count"></span></h2>
@@ -174,18 +197,6 @@
     </section>
   </div>
 
-  <div class="grid2">
-    <section class="panel">
-      <h2>Gaps</h2>
-      <p class="hint">Worked out from the data in this page.</p>
-      <div id="gaps"></div>
-    </section>
-    <section class="panel">
-      <h2>Claude's insights</h2>
-      <p class="hint" id="insightHint">Suggestions on what to test next.</p>
-      <div id="insights"></div>
-    </section>
-  </div>
   </aside>
   </div>
 </div>
@@ -491,6 +502,14 @@ applyDetails();
 $("clear").addEventListener("click", () => {
   state.q = ""; state.format = "all"; state.run = "all"; state.concept.clear(); state.exec.clear(); state.dest.clear(); state.cta.clear();
   $("q").value = ""; $("fmt").value = "all"; $("run").value = "all"; renderAll();
+});
+
+[["btnInsights", "drawerInsights"], ["btnGaps", "drawerGaps"]].forEach(([b, d]) => {
+  $(b).addEventListener("click", () => {
+    const open = !$(d).classList.contains("open");
+    $(d).classList.toggle("open", open);
+    $(b).setAttribute("aria-expanded", String(open));
+  });
 });
 
 // Uses data embedded by the build step (encrypted deploys) or falls back to the JSON files.
