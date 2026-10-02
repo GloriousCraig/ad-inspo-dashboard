@@ -526,6 +526,13 @@ document.addEventListener("click", (e) => {
       if (ad.why) url += q(k.why, ad.why);
       if (ad.idea) url += q(k.idea, ad.idea);
       if (ad.runRaw) url += q(k.run, JSON.stringify(ad.runRaw));
+      const pf = ad.perf || {};
+      if (pf.spend) url += q(k.spend, pf.spend);
+      if (pf.impr) url += q(k.impr, pf.impr);
+      if (pf.clicks) url += q(k.clicks, pf.clicks);
+      if (pf.purch) url += q(k.purch, pf.purch);
+      if (pf.rev) url += q(k.rev, pf.rev);
+      if (pf.period) url += q(k.period, pf.period);
       openNotePopup(url, 680, 820);
     } else alert("The edit form is not set up yet.");
     return;
