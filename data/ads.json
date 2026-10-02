@@ -25,7 +25,7 @@
       ],
       "SubmittedByName": "sample.user@example.com",
       "Created": "2026-09-02T15:00:00Z",
-      "AdDestination": "DTC (Glorious website)",
+      "AdDestination": "DTC (brand's own website)",
       "AdCTA": "Learn more"
     },
     {
@@ -114,7 +114,7 @@
       "ExecutionTags": "[\"Product hero (clean studio shots)\",\"Purely visual (little or no copy)\"]",
       "SubmittedByName": "sample.user@example.com",
       "Created": "2026-09-10T15:00:00Z",
-      "AdDestination": "DTC (Glorious website)",
+      "AdDestination": "DTC (brand's own website)",
       "AdCTA": "Shop now / Buy now"
     },
     {
@@ -137,7 +137,7 @@
       ],
       "SubmittedByName": "sample.user@example.com",
       "Created": "2026-09-12T15:00:00Z",
-      "AdDestination": "DTC (Glorious website)",
+      "AdDestination": "DTC (brand's own website)",
       "AdCTA": "Bold claim (makes you want to find out more)"
     },
     {
@@ -230,7 +230,7 @@
       ],
       "SubmittedByName": "sample.user@example.com",
       "Created": "2026-09-20T15:00:00Z",
-      "AdDestination": "DTC (Glorious website)",
+      "AdDestination": "DTC (brand's own website)",
       "AdCTA": "Learn more"
     },
     {
@@ -277,7 +277,7 @@
       ],
       "SubmittedByName": "sample.user@example.com",
       "Created": "2026-09-24T15:00:00Z",
-      "AdDestination": "DTC (Glorious website)",
+      "AdDestination": "DTC (brand's own website)",
       "AdCTA": "Shop now / Buy now"
     }
   ]
