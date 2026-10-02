@@ -91,6 +91,11 @@
   .insights-grid { display: grid; grid-template-columns: 1fr; gap: 4px 28px; }
   @media (min-width: 900px) { .insights-grid { grid-template-columns: 1fr 1fr; } }
   @media (prefers-reduced-motion: reduce) { .drawer, .drawer-btn .chev { transition: none; } }
+  .badge.runfor { background: #56B7E6; color: #1c1c1c; }
+  .perf { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 6px 0; }
+  .perf.none { color: var(--muted); font-size: 12px; font-style: italic; }
+  .pchip { background: var(--chip); padding: 3px 8px; font-size: 12px; }
+  .pchip b { color: #FFA40D; margin-right: 4px; }
   .badge.ai { background: transparent; border: 1px solid var(--muted, #888); }
   .badge.own { background: var(--own); color: #1c1c1c; }
   .badge.similar { background: var(--similar); color: #1c1c1c; }
@@ -179,6 +184,7 @@
       <option value="own">Glorious's own ads</option>
       <option value="other">Ads from other brands</option>
     </select>
+    <select id="sort" aria-label="Sort ads"><option value="new">Newest added</option><option value="long">Longest running</option><option value="roas">Best ROAS (our ads)</option></select>
     <button class="clear" id="clear">Clear filters</button>
     <button class="clear" id="detailsBtn" aria-pressed="false">Show details</button>
   </div>
@@ -230,7 +236,7 @@ const DESTS = ["DTC (brand's own website)","Amazon","Other retailer or marketpla
 const CTAS = ["Shop now / Buy now","Learn more","Pre-order / Join waitlist","Enter giveaway / Sign up","Watch / Follow","Limited-time sale (urgency)","Bold claim (makes you want to find out more)","Tagline / brand statement","No CTA","Other"];
 const RUN_LABEL = { own: "Our ad", similar: "We ran similar", no: "Not run", unsure: "Not sure", "": "Unknown" };
 
-const state = { q: "", format: "all", run: "all", concept: new Set(), exec: new Set(), dest: new Set(), cta: new Set() };
+const state = { sort: "new", q: "", format: "all", run: "all", concept: new Set(), exec: new Set(), dest: new Set(), cta: new Set() };
 let ADS = [];
 let NOTE_FORM = "";
 let EDIT_FORM = null;
@@ -270,6 +276,7 @@ function normalize(i) {
   return {
     id: i.ID ?? i.Id ?? i.id, brand: i.Title || "Untitled", link: safeUrl(link),
     format: i.AdFormat || "", hook: i.Hook || "", why: i.WhyItWorks || "", idea: i.GloriousIdea || "",
+    since: i.RunningSince ? String(i.RunningSince).slice(0, 10) : "", perf: { spend: +i.Spend || 0, impr: +i.Impressions || 0, clicks: +i.Clicks || 0, purch: +i.Purchases || 0, rev: +i.Revenue || 0, period: i.PerfPeriod ? String(i.PerfPeriod) : "" },
     run: runKind(i.AlreadyRun), runRaw: String(i.AlreadyRun || ""), concept: parseList(i.ConceptTags), exec: parseList(i.ExecutionTags),
     dest: i.AdDestination ? [String(i.AdDestination)] : [],
     cta: i.AdCTA ? [String(i.AdCTA)] : [],
@@ -329,6 +336,27 @@ function renderChart(el, labels, key) {
   }).join("");
 }
 
+const DAY = 86400000;
+function daysRunning(a) { if (!a.since) return null; const d = Math.floor((Date.now() - new Date(a.since + "T12:00:00Z").getTime()) / DAY); return d < 0 ? 0 : d; }
+function runLabel(a) { const d = daysRunning(a); if (d === null) return ""; return d === 0 ? "Started today" : d === 1 ? "Running 1 day" : "Running " + d + " days"; }
+function hasPerf(a) { return a.perf && a.perf.spend > 0; }
+function perfStats(p) { return { roas: p.spend ? p.rev / p.spend : 0, ctr: p.impr ? (p.clicks / p.impr) * 100 : 0, cpc: p.clicks ? p.spend / p.clicks : 0, cpa: p.purch ? p.spend / p.purch : 0 }; }
+const money = (n) => "$" + Math.round(n).toLocaleString("en-US");
+function perfChips(a) {
+  if (!hasPerf(a)) return isOurs(a) ? '<div class="perf none">No results added yet</div>' : "";
+  const s = perfStats(a.perf);
+  const chips = [["Spend", money(a.perf.spend)], ["ROAS", s.roas ? s.roas.toFixed(2) + "x" : "n/a"], ["CTR", s.ctr ? s.ctr.toFixed(2) + "%" : "n/a"], ["Purchases", a.perf.purch ? String(a.perf.purch) : "n/a"]];
+  return '<div class="perf">' + chips.map(([k, v]) => '<span class="pchip"><b>' + k + '</b> ' + esc(v) + '</span>').join("") + (a.perf.period ? '<span class="sub">' + esc(a.perf.period) + '</span>' : "") + "</div>";
+}
+function perfByTag() {
+  const own = ADS.filter((a) => isOurs(a) && hasPerf(a));
+  if (!own.length) return `<b>Our results by tag</b><p class="hint">No results yet. Once Spend, Impressions, Clicks, Purchases and Revenue are added to our own ads, this shows which tags perform best.</p>`;
+  const block = (title, labels, key) => {
+    const rows = labels.map((t) => { const l = own.filter((a) => a[key].includes(t)); const sp = l.reduce((x, a) => x + a.perf.spend, 0), rv = l.reduce((x, a) => x + a.perf.rev, 0), im = l.reduce((x, a) => x + a.perf.impr, 0), cl = l.reduce((x, a) => x + a.perf.clicks, 0); return { t, n: l.length, roas: sp ? rv / sp : 0, ctr: im ? (cl / im) * 100 : 0 }; }).filter((r) => r.n > 0).sort((a, b) => b.roas - a.roas);
+    return `<b>${title}</b>` + (rows.length ? `<ul class="gap-list">${rows.map((r) => `<li>${esc(r.t.split(" (")[0])} <span class="sub">(${r.n} ad${r.n > 1 ? "s" : ""}): ROAS ${r.roas ? r.roas.toFixed(2) + "x" : "n/a"}, CTR ${r.ctr ? r.ctr.toFixed(2) + "%" : "n/a"}</span></li>`).join("")}</ul>` : '<p class="hint">Nothing here.</p>');
+  };
+  return `<b>Our results by tag (${own.length} ads with results)</b><p class="hint">Weighted by spend. Small samples, so read with care.</p>` + block("By production style", CONCEPTS, "concept") + block("By messaging", EXECUTIONS, "exec");
+}
 function renderGaps() {
   const conceptStat = CONCEPTS.map((t) => {
     const all = ADS.filter((a) => a.concept.includes(t));
@@ -350,7 +378,8 @@ function renderGaps() {
      <b>Destinations seen in other brands' ads, never used by us</b>${li(destNeverRun, (s) => `<li>${esc(s.t)} <span class="sub">(${s.n} ad${s.n > 1 ? "s" : ""})</span></li>`)}
      <b>Production styles with no ads collected yet</b>${li(uncollected, (s) => `<li>${esc(s.t)}</li>`)}
      <b>Messaging styles seen in other brands' ads, never used by us</b>${li(textNeverRun, (s) => `<li>${esc(s.t)} <span class="sub">(${s.n} ad${s.n > 1 ? "s" : ""})</span></li>`)}
-     <b>Messaging styles with no ads collected yet</b>${li(thinExec, (s) => `<li>${esc(s.t)}</li>`)}`;
+     <b>Messaging styles with no ads collected yet</b>${li(thinExec, (s) => `<li>${esc(s.t)}</li>`)}
+     ${perfByTag()}`;
 }
 
 function openNotePopup(url, w = 520, hgt = 640) {
@@ -361,7 +390,9 @@ function openNotePopup(url, w = 520, hgt = 640) {
 }
 let introPlayed = false;
 function renderCards() {
-  const list = ADS.filter((a) => matches(a)).sort((a, b) => String(b.created).localeCompare(String(a.created)));
+  const byNew = (a, b) => String(b.created).localeCompare(String(a.created));
+  const sorters = { new: byNew, long: (a, b) => (daysRunning(b) ?? -1) - (daysRunning(a) ?? -1) || byNew(a, b), roas: (a, b) => (hasPerf(b) ? perfStats(b.perf).roas : -1) - (hasPerf(a) ? perfStats(a.perf).roas : -1) || byNew(a, b) };
+  const list = ADS.filter((a) => matches(a)).sort(sorters[state.sort] || byNew);
   $("count").textContent = `(${list.length} of ${ADS.length})`;
   if (!list.length) { $("cards").innerHTML = `<div class="empty">No ads match these filters.</div>`; return; }
   const box = $("cards");
@@ -376,8 +407,11 @@ function renderCards() {
         ${a.format ? `<span class="badge">${esc(a.format)}</span>` : ""}
         ${a.dest[0] ? `<span class="badge" title="Where the ad sends people">${esc(a.dest[0].split(" (")[0])}</span>` : ""}
         <span class="badge ${a.run}">${esc(RUN_LABEL[a.run])}</span>
+      ${runLabel(a) ? `<span class="badge runfor" title="Since ${esc(a.since)}">${esc(runLabel(a))}</span>` : ""}
+        ${runLabel(a) ? `<span class="badge runfor" title="Since ${esc(a.since)}">${esc(runLabel(a))}</span>` : ""}
         ${a.ai ? `<span class="badge ai" title="Written by Claude from an Ad Library link">Added by Claude</span>` : `<span class="badge ai" title="Submitted by a person through the form">Added by a person</span>`}
       </div>
+      ${perfChips(a)}
       ${a.hook ? `<div class="fld"><b>Hook:</b> ${esc(a.hook)}</div>` : ""}
       ${a.why ? `<div class="fld"><b>Why it works:</b> ${esc(a.why)}</div>` : ""}
       ${a.idea ? `<div class="fld"><b>For Glorious:</b> ${esc(a.idea)}</div>` : ""}
@@ -416,6 +450,7 @@ function detailBlock(a) {
       <span class="badge ${a.run}">${esc(RUN_LABEL[a.run])}</span>
         ${a.ai ? `<span class="badge ai" title="Written by Claude from an Ad Library link">Added by Claude</span>` : `<span class="badge ai" title="Submitted by a person through the form">Added by a person</span>`}
     </div>
+    ${perfChips(a)}
     ${a.hook ? `<div class="fld"><b>Hook</b>${esc(a.hook)}</div>` : ""}
     ${a.why ? `<div class="fld"><b>Why it works</b>${esc(a.why)}</div>` : ""}
     ${a.idea ? `<div class="fld"><b>For Glorious</b>${esc(a.idea)}</div>` : ""}
@@ -526,6 +561,7 @@ document.addEventListener("keydown", (e) => {
   else if (e.key === "ArrowRight") stepLb(1);
 });
 $("q").addEventListener("input", (e) => { state.q = e.target.value.trim(); renderAll(); });
+$("sort").addEventListener("change", (e) => { state.sort = e.target.value; renderAll(); });
 $("fmt").addEventListener("change", (e) => { state.format = e.target.value; renderAll(); });
 $("run").addEventListener("change", (e) => { state.run = e.target.value; renderAll(); });
 let showDetails = false;
