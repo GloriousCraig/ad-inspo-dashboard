@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Glorious | Ad Inspo Library</title>
+<title>Glorious | Ad Archive</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Syne:wght@800&family=Work+Sans:wght@300;400;500&display=swap" rel="stylesheet">
@@ -56,6 +56,7 @@
   .meta { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
   .badge { font-size: 11px; font-weight: 650; text-transform: uppercase; letter-spacing: .04em; padding: 2px 8px; border-radius: 0; background: var(--chip); }
   .clickhint { margin: 0 0 12px; padding: 10px 12px; border-left: 4px solid #FFA40D; background: var(--chip); font-size: 13px; }
+  .notes { white-space: pre-line; border-left: 3px solid #FFA40D; padding-left: 8px; }
   .badge.ai { background: transparent; border: 1px solid var(--muted, #888); }
   .badge.own { background: var(--own); color: #1c1c1c; }
   .badge.similar { background: var(--similar); color: #1c1c1c; }
@@ -123,7 +124,7 @@
 <div class="wrap">
   <header>
     <img class="logo" alt="Glorious" src="data:image/png;base64,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" width="138.5" height="34">
-    <h1>Ad Inspo Library</h1>
+    <h1>Ad Archive</h1>
     <span class="sub" id="gen"></span>
   </header>
   <div class="banner" id="sampleBanner" hidden></div>
@@ -206,6 +207,7 @@ const RUN_LABEL = { own: "Our ad", similar: "We ran similar", no: "Not run", uns
 
 const state = { q: "", format: "all", run: "all", concept: new Set(), exec: new Set(), dest: new Set(), cta: new Set() };
 let ADS = [];
+let NOTE_FORM = "";
 
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -247,7 +249,7 @@ function normalize(i) {
     cta: i.AdCTA ? [String(i.AdCTA)] : [],
     shot: parseShot(i.ScreenshotLink),
     img: typeof i._image === "string" && i._image.startsWith("data:image/") ? i._image : "",
-    by: i.SubmittedByName || "", ai: /^claude/i.test(i.FormSource || "") || /^claude/i.test(i.SubmittedByName || ""), created: i.Created || ""
+    by: i.SubmittedByName || "", notes: i.TeamNotes ? String(i.TeamNotes) : "", ai: /^claude/i.test(i.FormSource || "") || /^claude/i.test(i.SubmittedByName || ""), created: i.Created || ""
   };
 }
 
@@ -316,10 +318,10 @@ function renderGaps() {
   const destNeverRun = destStat.filter((s) => s.n > 0 && s.ours === 0 && s.t !== "Not sure");
   const li = (arr, fn) => (arr.length ? `<ul class="gap-list">${arr.map(fn).join("")}</ul>` : `<p class="hint">Nothing here.</p>`);
   $("gaps").innerHTML =
-    `<b>Production styles seen in inspo, never used by us</b>${li(neverRun, (s) => `<li>${esc(s.t)} <span class="sub">(${s.n} ad${s.n > 1 ? "s" : ""})</span></li>`)}
-     <b>Destinations seen in inspo, never used by us</b>${li(destNeverRun, (s) => `<li>${esc(s.t)} <span class="sub">(${s.n} ad${s.n > 1 ? "s" : ""})</span></li>`)}
+    `<b>Production styles seen in other brands' ads, never used by us</b>${li(neverRun, (s) => `<li>${esc(s.t)} <span class="sub">(${s.n} ad${s.n > 1 ? "s" : ""})</span></li>`)}
+     <b>Destinations seen in other brands' ads, never used by us</b>${li(destNeverRun, (s) => `<li>${esc(s.t)} <span class="sub">(${s.n} ad${s.n > 1 ? "s" : ""})</span></li>`)}
      <b>Production styles with no ads collected yet</b>${li(uncollected, (s) => `<li>${esc(s.t)}</li>`)}
-     <b>Messaging styles seen in inspo, never used by us</b>${li(textNeverRun, (s) => `<li>${esc(s.t)} <span class="sub">(${s.n} ad${s.n > 1 ? "s" : ""})</span></li>`)}
+     <b>Messaging styles seen in other brands' ads, never used by us</b>${li(textNeverRun, (s) => `<li>${esc(s.t)} <span class="sub">(${s.n} ad${s.n > 1 ? "s" : ""})</span></li>`)}
      <b>Messaging styles with no ads collected yet</b>${li(thinExec, (s) => `<li>${esc(s.t)}</li>`)}`;
 }
 
@@ -333,7 +335,7 @@ function renderCards() {
   if (!introPlayed) { introPlayed = true; setTimeout(() => box.classList.remove("enter"), 2600); }
   $("cards").innerHTML = list.map((a, i) => `
     <article class="card${a.img ? "" : " noimg"}" id="ad-${esc(a.id)}" style="--i:${i}">
-      <div class="actions"><button type="button" data-copy="ad" data-id="${esc(a.id)}" title="Copy a link to this ad on the dashboard">Copy link</button>${a.link ? `<button type="button" data-copy="src" data-id="${esc(a.id)}" title="Copy the link to the original ad">Copy source</button>` : ""}</div>
+      <div class="actions"><button type="button" data-note="${esc(a.id)}" title="Add a team note to this ad">Add note</button><button type="button" data-copy="ad" data-id="${esc(a.id)}" title="Copy a link to this ad on the dashboard">Copy link</button>${a.link ? `<button type="button" data-copy="src" data-id="${esc(a.id)}" title="Copy the link to the original ad">Copy source</button>` : ""}</div>
       ${a.img ? (a.link ? `<a class="thumb" href="${esc(a.link)}" target="_blank" rel="noopener noreferrer" data-zoom="${esc(a.id)}" title="${esc(a.brand)} (right-click to copy the source link)" aria-label="Enlarge the screenshot for ${esc(a.brand)}"><img src="${a.img}" alt="Screenshot of the ${esc(a.brand)} ad" loading="lazy"></a>` : `<button class="thumb" data-zoom="${esc(a.id)}" title="${esc(a.brand)}" aria-label="Enlarge the screenshot for ${esc(a.brand)}"><img src="${a.img}" alt="Screenshot of the ${esc(a.brand)} ad" loading="lazy"></button>`) : ""}
       <h3${a.img ? "" : ` data-zoom="${esc(a.id)}" style="cursor:pointer"`}>${esc(a.brand)}</h3>
       <div class="meta">
@@ -345,6 +347,7 @@ function renderCards() {
       ${a.hook ? `<div class="fld"><b>Hook:</b> ${esc(a.hook)}</div>` : ""}
       ${a.why ? `<div class="fld"><b>Why it works:</b> ${esc(a.why)}</div>` : ""}
       ${a.idea ? `<div class="fld"><b>For Glorious:</b> ${esc(a.idea)}</div>` : ""}
+      ${a.notes ? `<div class="fld notes"><b>Team notes:</b> ${esc(a.notes)}</div>` : ""}
       <div class="tags">${[...a.concept, ...a.exec].map((t) => `<span class="tag">${esc(t.split(" (")[0])}</span>`).join("")}</div>
       ${a.link ? `<a href="${esc(a.link)}" target="_blank" rel="noopener noreferrer">Open source ad</a>` : ""}
       ${a.shot.link ? `<a href="${esc(a.shot.link)}" target="_blank" rel="noopener noreferrer" title="${esc(a.shot.name)}">View screenshot</a>` : ""}
@@ -382,8 +385,10 @@ function detailBlock(a) {
     ${a.hook ? `<div class="fld"><b>Hook</b>${esc(a.hook)}</div>` : ""}
     ${a.why ? `<div class="fld"><b>Why it works</b>${esc(a.why)}</div>` : ""}
     ${a.idea ? `<div class="fld"><b>For Glorious</b>${esc(a.idea)}</div>` : ""}
+    ${a.notes ? `<div class="fld notes"><b>Team notes</b>${esc(a.notes)}</div>` : ""}
     ${tags ? `<div class="tags">${tags}</div>` : ""}
     <div class="lb-actions">
+      <button type="button" class="clear" data-note="${esc(a.id)}">Add note</button>
       <button type="button" class="clear" data-copy="ad" data-id="${esc(a.id)}">Copy link</button>
       ${a.link ? `<button type="button" class="clear" data-copy="src" data-id="${esc(a.id)}">Copy source</button>` : ""}
     </div>
@@ -437,6 +442,8 @@ function toggle(key, label) {
   renderAll();
 }
 document.addEventListener("click", (e) => {
+  const nb = e.target.closest("[data-note]");
+  if (nb) { e.preventDefault(); e.stopPropagation(); if (NOTE_FORM) window.open(NOTE_FORM + encodeURIComponent(nb.dataset.note), "_blank", "noopener"); else alert("The note form is not set up yet."); return; }
   const cp = e.target.closest("[data-copy]");
   if (cp) {
     const ad = ADS.find((a) => String(a.id) === cp.dataset.id);
@@ -511,6 +518,7 @@ async function load() {
   renderKpis(); renderGaps(); renderAll(); openFromHash();
   try {
     const ins = await getJson("data/insights.json", "insights");
+    NOTE_FORM = typeof ins.noteForm === "string" && ins.noteForm.startsWith("https://forms.") ? ins.noteForm : "";
     $("insightHint").textContent = ins.sample ? "Sample insights, made up to show the layout." : "Suggestions on what to test next." + (ins.generated ? " Generated " + String(ins.generated).slice(0, 10) + "." : "");
     $("insights").innerHTML = (ins.items || []).map((i) => `<div class="insight"><b>${esc(i.title)}</b>${esc(i.body)}</div>`).join("") || `<p class="hint">No insights yet.</p>`;
   } catch {

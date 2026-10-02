@@ -1,6 +1,6 @@
-# Ad Inspo Dashboard
+# Ad Archive Dashboard
 
-A static dashboard for browsing the Ad Inspo Library (the SharePoint list on the Marketing site).
+A static dashboard for browsing the Ad Archive (the SharePoint list on the Marketing site).
 
 ## Files
 
