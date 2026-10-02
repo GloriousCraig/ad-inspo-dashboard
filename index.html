@@ -57,6 +57,14 @@
   .badge { font-size: 11px; font-weight: 650; text-transform: uppercase; letter-spacing: .04em; padding: 2px 8px; border-radius: 0; background: var(--chip); }
   .clickhint { margin: 0 0 12px; padding: 10px 12px; border-left: 4px solid #FFA40D; background: var(--chip); font-size: 13px; }
   .notes { white-space: pre-line; border-left: 3px solid #FFA40D; padding-left: 8px; }
+  .kpi-btn { border: 0; cursor: pointer; text-align: left; font: inherit; color: #1c1c1c; }
+  .kpi-btn.gold { background: #FFA40D; }
+  .kpi-btn.blue { background: #56B7E6; }
+  .kpi-btn .n { font-size: 20px; line-height: 1.3; }
+  .kpi-btn .l { color: #1c1c1c; font-weight: 600; }
+  .kpi-btn:hover { filter: brightness(1.08); }
+  .kpi-btn .chev { display: inline-block; transition: transform .3s; }
+  .kpi-btn[aria-expanded="true"] .chev { transform: rotate(180deg); }
   .drawer-bar { display: flex; gap: 10px; flex-wrap: wrap; margin: 0 0 12px; }
   .drawer-btn { font: inherit; font-weight: 700; letter-spacing: .02em; padding: 10px 18px; border: 0; border-radius: 0; cursor: pointer; color: #1c1c1c; display: inline-flex; gap: 10px; align-items: center; }
   .drawer-btn.gold { background: #FFA40D; }
@@ -147,10 +155,6 @@
 
   <div class="kpis" id="kpis"></div>
 
-  <div class="drawer-bar">
-    <button type="button" class="drawer-btn gold" id="btnInsights" aria-expanded="false" aria-controls="drawerInsights">Claude's insights <span class="chev" aria-hidden="true">&#9662;</span></button>
-    <button type="button" class="drawer-btn blue" id="btnGaps" aria-expanded="false" aria-controls="drawerGaps">Gaps <span class="chev" aria-hidden="true">&#9662;</span></button>
-  </div>
   <section class="drawer gold" id="drawerInsights" aria-label="Claude's insights"><div class="drawer-in"><p class="hint" id="insightHint">Suggestions on what to test next.</p><div class="insights-grid" id="insights"></div></div></section>
   <section class="drawer blue" id="drawerGaps" aria-label="Gaps"><div class="drawer-in"><p class="hint">Worked out from the data in this page.</p><div id="gaps"></div></div></section>
 
@@ -220,6 +224,7 @@ const state = { q: "", format: "all", run: "all", concept: new Set(), exec: new 
 let ADS = [];
 let NOTE_FORM = "";
 let EDIT_FORM = "";
+let TAG_FORM = null;
 
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -294,7 +299,9 @@ function renderKpis() {
     [total ? Math.round((video / total) * 100) + "%" : "0%", "Video (rest are stills)"],
     [top ? top[0].split(" (")[0] : "None yet", top ? `Top production style (${top[1]} ads)` : "Top production style"]
   ];
-  $("kpis").innerHTML = items.map(([n, l]) => `<div class="kpi"><div class="n">${esc(n)}</div><div class="l">${esc(l)}</div></div>`).join("");
+  $("kpis").innerHTML = items.map(([n, l]) => `<div class="kpi"><div class="n">${esc(n)}</div><div class="l">${esc(l)}</div></div>`).join("") +
+    `<button type="button" class="kpi kpi-btn gold" data-drawer="drawerInsights" aria-expanded="false" aria-controls="drawerInsights"><div class="n">Claude's insights</div><div class="l">Click to open <span class="chev" aria-hidden="true">&#9662;</span></div></button>` +
+    `<button type="button" class="kpi kpi-btn blue" data-drawer="drawerGaps" aria-expanded="false" aria-controls="drawerGaps"><div class="n">Gaps</div><div class="l">Click to open <span class="chev" aria-hidden="true">&#9662;</span></div></button>`;
 }
 
 function renderChart(el, labels, key) {
@@ -353,7 +360,7 @@ function renderCards() {
   if (!introPlayed) { introPlayed = true; setTimeout(() => box.classList.remove("enter"), 2600); }
   $("cards").innerHTML = list.map((a, i) => `
     <article class="card${a.img ? "" : " noimg"}" id="ad-${esc(a.id)}" style="--i:${i}">
-      <div class="actions"><button type="button" data-edit="${esc(a.id)}" title="Edit this ad's details in SharePoint">Edit</button><button type="button" data-note="${esc(a.id)}" title="Add a team note to this ad">Add note</button><button type="button" data-copy="ad" data-id="${esc(a.id)}" title="Copy a link to this ad on the dashboard">Copy link</button>${a.link ? `<button type="button" data-copy="src" data-id="${esc(a.id)}" title="Copy the link to the original ad">Copy source</button>` : ""}</div>
+      <div class="actions"><button type="button" data-edit="${esc(a.id)}" title="Edit this ad's details in SharePoint">Edit details</button><button type="button" data-tags="${esc(a.id)}" title="Fix the tags with checkboxes">Edit tags</button><button type="button" data-copy="ad" data-id="${esc(a.id)}" title="Copy a link to this ad on the dashboard">Copy link</button>${a.link ? `<button type="button" data-copy="src" data-id="${esc(a.id)}" title="Copy the link to the original ad">Copy source</button>` : ""}</div>
       ${a.img ? (a.link ? `<a class="thumb" href="${esc(a.link)}" target="_blank" rel="noopener noreferrer" data-zoom="${esc(a.id)}" title="${esc(a.brand)} (right-click to copy the source link)" aria-label="Enlarge the screenshot for ${esc(a.brand)}"><img src="${a.img}" alt="Screenshot of the ${esc(a.brand)} ad" loading="lazy"></a>` : `<button class="thumb" data-zoom="${esc(a.id)}" title="${esc(a.brand)}" aria-label="Enlarge the screenshot for ${esc(a.brand)}"><img src="${a.img}" alt="Screenshot of the ${esc(a.brand)} ad" loading="lazy"></button>`) : ""}
       <h3${a.img ? "" : ` data-zoom="${esc(a.id)}" style="cursor:pointer"`}>${esc(a.brand)}</h3>
       <div class="meta">
@@ -407,7 +414,7 @@ function detailBlock(a) {
     ${tags ? `<div class="tags">${tags}</div>` : ""}
     <div class="lb-actions">
       <button type="button" class="clear" data-edit="${esc(a.id)}">Edit details</button>
-      <button type="button" class="clear" data-note="${esc(a.id)}">Add note</button>
+      <button type="button" class="clear" data-tags="${esc(a.id)}">Edit tags</button>
       <button type="button" class="clear" data-copy="ad" data-id="${esc(a.id)}">Copy link</button>
       ${a.link ? `<button type="button" class="clear" data-copy="src" data-id="${esc(a.id)}">Copy source</button>` : ""}
     </div>
@@ -461,6 +468,10 @@ function toggle(key, label) {
   renderAll();
 }
 document.addEventListener("click", (e) => {
+  const db = e.target.closest("[data-drawer]");
+  if (db) { const d = $(db.dataset.drawer); const open = !d.classList.contains("open"); d.classList.toggle("open", open); db.setAttribute("aria-expanded", String(open)); const l = db.querySelector(".l"); if (l) l.firstChild.textContent = open ? "Click to close " : "Click to open "; return; }
+  const tb = e.target.closest("[data-tags]");
+  if (tb) { e.preventDefault(); e.stopPropagation(); const ad = ADS.find((x) => String(x.id) === String(tb.dataset.tags)); if (TAG_FORM && ad) openNotePopup(TAG_FORM.url + "&" + TAG_FORM.id + "=" + encodeURIComponent(ad.id) + "&" + TAG_FORM.prod + "=" + encodeURIComponent(JSON.stringify(ad.concept)) + "&" + TAG_FORM.msg + "=" + encodeURIComponent(JSON.stringify(ad.exec)), 640, 800); else alert("The tag editor is not set up yet."); return; }
   const eb = e.target.closest("[data-edit]");
   if (eb) { e.preventDefault(); e.stopPropagation(); if (EDIT_FORM) openNotePopup(EDIT_FORM + encodeURIComponent(eb.dataset.edit), 820, 760); else alert("The edit link is not set up yet."); return; }
   const nb = e.target.closest("[data-note]");
@@ -514,14 +525,6 @@ $("clear").addEventListener("click", () => {
   $("q").value = ""; $("fmt").value = "all"; $("run").value = "all"; renderAll();
 });
 
-[["btnInsights", "drawerInsights"], ["btnGaps", "drawerGaps"]].forEach(([b, d]) => {
-  $(b).addEventListener("click", () => {
-    const open = !$(d).classList.contains("open");
-    $(d).classList.toggle("open", open);
-    $(b).setAttribute("aria-expanded", String(open));
-  });
-});
-
 // Uses data embedded by the build step (encrypted deploys) or falls back to the JSON files.
 async function getJson(path, key) {
   if (window.__DATA__ && window.__DATA__[key]) return window.__DATA__[key];
@@ -548,6 +551,7 @@ async function load() {
   try {
     const ins = await getJson("data/insights.json", "insights");
     EDIT_FORM = typeof ins.editForm === "string" && ins.editForm.startsWith("https://") && ins.editForm.includes(".sharepoint.com/") ? ins.editForm : "";
+    TAG_FORM = ins.tagForm && typeof ins.tagForm.url === "string" && ins.tagForm.url.startsWith("https://forms.") ? ins.tagForm : null;
     NOTE_FORM = typeof ins.noteForm === "string" && ins.noteForm.startsWith("https://forms.") ? ins.noteForm : "";
     $("insightHint").textContent = ins.sample ? "Sample insights, made up to show the layout." : "Suggestions on what to test next." + (ins.generated ? " Generated " + String(ins.generated).slice(0, 10) + "." : "");
     $("insights").innerHTML = (ins.items || []).map((i) => `<div class="insight"><b>${esc(i.title)}</b>${esc(i.body)}</div>`).join("") || `<p class="hint">No insights yet.</p>`;
