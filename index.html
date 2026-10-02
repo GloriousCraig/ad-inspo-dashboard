@@ -233,8 +233,7 @@ const RUN_LABEL = { own: "Our ad", similar: "We ran similar", no: "Not run", uns
 const state = { q: "", format: "all", run: "all", concept: new Set(), exec: new Set(), dest: new Set(), cta: new Set() };
 let ADS = [];
 let NOTE_FORM = "";
-let EDIT_FORM = "";
-let TAG_FORM = null;
+let EDIT_FORM = null;
 
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -271,7 +270,7 @@ function normalize(i) {
   return {
     id: i.ID ?? i.Id ?? i.id, brand: i.Title || "Untitled", link: safeUrl(link),
     format: i.AdFormat || "", hook: i.Hook || "", why: i.WhyItWorks || "", idea: i.GloriousIdea || "",
-    run: runKind(i.AlreadyRun), concept: parseList(i.ConceptTags), exec: parseList(i.ExecutionTags),
+    run: runKind(i.AlreadyRun), runRaw: String(i.AlreadyRun || ""), concept: parseList(i.ConceptTags), exec: parseList(i.ExecutionTags),
     dest: i.AdDestination ? [String(i.AdDestination)] : [],
     cta: i.AdCTA ? [String(i.AdCTA)] : [],
     shot: parseShot(i.ScreenshotLink),
@@ -370,7 +369,7 @@ function renderCards() {
   if (!introPlayed) { introPlayed = true; setTimeout(() => box.classList.remove("enter"), 2600); }
   $("cards").innerHTML = list.map((a, i) => `
     <article class="card${a.img ? "" : " noimg"}" id="ad-${esc(a.id)}" style="--i:${i}">
-      <div class="actions"><button type="button" data-edit="${esc(a.id)}" title="Edit this ad's details in SharePoint">Edit details</button><button type="button" data-tags="${esc(a.id)}" title="Fix the tags with checkboxes">Edit tags</button><button type="button" data-copy="ad" data-id="${esc(a.id)}" title="Copy a link to this ad on the dashboard">Copy link</button>${a.link ? `<button type="button" data-copy="src" data-id="${esc(a.id)}" title="Copy the link to the original ad">Copy source</button>` : ""}</div>
+      <div class="actions"><button type="button" data-edit="${esc(a.id)}" title="Edit this ad (tags, hook, notes and more)">Edit</button><button type="button" data-copy="ad" data-id="${esc(a.id)}" title="Copy a link to this ad on the dashboard">Copy link</button>${a.link ? `<button type="button" data-copy="src" data-id="${esc(a.id)}" title="Copy the link to the original ad">Copy source</button>` : ""}</div>
       ${a.img ? (a.link ? `<a class="thumb" href="${esc(a.link)}" target="_blank" rel="noopener noreferrer" data-zoom="${esc(a.id)}" title="${esc(a.brand)} (right-click to copy the source link)" aria-label="Enlarge the screenshot for ${esc(a.brand)}"><img src="${a.img}" alt="Screenshot of the ${esc(a.brand)} ad" loading="lazy"></a>` : `<button class="thumb" data-zoom="${esc(a.id)}" title="${esc(a.brand)}" aria-label="Enlarge the screenshot for ${esc(a.brand)}"><img src="${a.img}" alt="Screenshot of the ${esc(a.brand)} ad" loading="lazy"></button>`) : ""}
       <h3${a.img ? "" : ` data-zoom="${esc(a.id)}" style="cursor:pointer"`}>${esc(a.brand)}</h3>
       <div class="meta">
@@ -423,8 +422,7 @@ function detailBlock(a) {
     ${a.notes ? `<div class="fld notes"><b>Team notes</b>${esc(a.notes)}</div>` : ""}
     ${tags ? `<div class="tags">${tags}</div>` : ""}
     <div class="lb-actions">
-      <button type="button" class="clear" data-edit="${esc(a.id)}">Edit details</button>
-      <button type="button" class="clear" data-tags="${esc(a.id)}">Edit tags</button>
+      <button type="button" class="clear" data-edit="${esc(a.id)}">Edit</button>
       <button type="button" class="clear" data-copy="ad" data-id="${esc(a.id)}">Copy link</button>
       ${a.link ? `<button type="button" class="clear" data-copy="src" data-id="${esc(a.id)}">Copy source</button>` : ""}
     </div>
@@ -480,10 +478,23 @@ function toggle(key, label) {
 document.addEventListener("click", (e) => {
   const db = e.target.closest("[data-drawer]");
   if (db) { const d = $(db.dataset.drawer); const open = !d.classList.contains("open"); d.classList.toggle("open", open); db.setAttribute("aria-expanded", String(open)); const l = db.querySelector(".l"); if (l) l.firstChild.textContent = open ? "Click to close " : "Click to open "; return; }
-  const tb = e.target.closest("[data-tags]");
-  if (tb) { e.preventDefault(); e.stopPropagation(); const ad = ADS.find((x) => String(x.id) === String(tb.dataset.tags)); if (TAG_FORM && ad) openNotePopup(TAG_FORM.url + "&" + TAG_FORM.id + "=" + encodeURIComponent(ad.id) + "&" + TAG_FORM.prod + "=" + encodeURIComponent(JSON.stringify(ad.concept)) + "&" + TAG_FORM.msg + "=" + encodeURIComponent(JSON.stringify(ad.exec)), 640, 800); else alert("The tag editor is not set up yet."); return; }
   const eb = e.target.closest("[data-edit]");
-  if (eb) { e.preventDefault(); e.stopPropagation(); if (EDIT_FORM) openNotePopup(EDIT_FORM + encodeURIComponent(eb.dataset.edit), 820, 760); else alert("The edit link is not set up yet."); return; }
+  if (eb) {
+    e.preventDefault(); e.stopPropagation();
+    const ad = ADS.find((x) => String(x.id) === String(eb.dataset.edit));
+    if (EDIT_FORM && ad) {
+      const k = EDIT_FORM.keys, q = (id, v) => "&" + id + "=" + encodeURIComponent(v);
+      let url = EDIT_FORM.url + q(k.id, ad.id) + q(k.title, ad.brand) + q(k.prod, JSON.stringify(ad.concept)) + q(k.msg, JSON.stringify(ad.exec));
+      if (ad.format) url += q(k.format, JSON.stringify(ad.format));
+      if (ad.dest[0]) url += q(k.dest, JSON.stringify(ad.dest[0]));
+      if (ad.hook) url += q(k.hook, ad.hook);
+      if (ad.why) url += q(k.why, ad.why);
+      if (ad.idea) url += q(k.idea, ad.idea);
+      if (ad.runRaw) url += q(k.run, JSON.stringify(ad.runRaw));
+      openNotePopup(url, 680, 820);
+    } else alert("The edit form is not set up yet.");
+    return;
+  }
   const nb = e.target.closest("[data-note]");
   if (nb) { e.preventDefault(); e.stopPropagation(); if (NOTE_FORM) openNotePopup(NOTE_FORM + encodeURIComponent(nb.dataset.note)); else alert("The note form is not set up yet."); return; }
   const cp = e.target.closest("[data-copy]");
@@ -560,8 +571,7 @@ async function load() {
   renderKpis(); renderGaps(); renderAll(); openFromHash();
   try {
     const ins = await getJson("data/insights.json", "insights");
-    EDIT_FORM = typeof ins.editForm === "string" && ins.editForm.startsWith("https://") && ins.editForm.includes(".sharepoint.com/") ? ins.editForm : "";
-    TAG_FORM = ins.tagForm && typeof ins.tagForm.url === "string" && ins.tagForm.url.startsWith("https://forms.") ? ins.tagForm : null;
+    EDIT_FORM = ins.editForm && typeof ins.editForm.url === "string" && ins.editForm.url.startsWith("https://forms.") && ins.editForm.keys ? ins.editForm : null;
     NOTE_FORM = typeof ins.noteForm === "string" && ins.noteForm.startsWith("https://forms.") ? ins.noteForm : "";
     $("insightHint").textContent = ins.sample ? "Sample insights, made up to show the layout." : "Suggestions on what to test next." + (ins.generated ? " Generated " + String(ins.generated).slice(0, 10) + "." : "");
     $("insights").innerHTML = (ins.items || []).map((i) => `<div class="insight"><b>${esc(i.title)}</b>${esc(i.body)}</div>`).join("") || `<p class="hint">No insights yet.</p>`;
