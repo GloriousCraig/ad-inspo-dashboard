@@ -43,6 +43,11 @@ jobs:
           else
             echo "No real data yet. Building with the sample data."
           fi
+          if [ -d private-data/images ]; then
+            mkdir -p data/images
+            cp -r private-data/images/. data/images/
+            echo "Using $(ls data/images | wc -l) screenshot file(s) from the private repo."
+          fi
           if [ -f private-data/insights.json ]; then
             cp private-data/insights.json data/insights.json
             echo "Using insights from the private repo."
