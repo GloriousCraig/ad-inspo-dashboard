@@ -73,7 +73,14 @@
   .empty { color: var(--muted); padding: 24px; text-align: center; }
   .insight { border-left: 3px solid var(--accent); padding: 4px 0 4px 12px; margin: 10px 0; }
   .insight b { display: block; }
-  .section-title { font-size: 18px; margin: 24px 0 8px; }
+  .section-title { font-size: 18px; margin: 4px 0 8px; }
+  .layout { display: grid; grid-template-columns: 1fr; gap: 20px; align-items: start; }
+  .side .grid2 { grid-template-columns: 1fr; gap: 16px; margin-bottom: 16px; }
+  @media (min-width: 1100px) {
+    .layout { grid-template-columns: minmax(0, 1fr) 400px; }
+    .side { position: sticky; top: 12px; max-height: calc(100vh - 24px); overflow-y: auto; padding-right: 4px; }
+    .cards { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+  }
 </style>
 </head>
 <body>
@@ -86,6 +93,25 @@
 
   <div class="kpis" id="kpis"></div>
 
+  <div class="layout">
+  <main class="browse">
+  <h2 class="section-title">Browse ads <span class="sub" id="count"></span></h2>
+  <div class="controls">
+    <input type="search" id="q" placeholder="Search brand, hook, notes" aria-label="Search ads">
+    <select id="fmt" aria-label="Format"><option value="all">All formats</option><option>Video</option><option>Still</option></select>
+    <select id="run" aria-label="Run at Glorious">
+      <option value="all">All ads</option>
+      <option value="own">Our own ads</option>
+      <option value="similar">We ran something similar</option>
+      <option value="no">Not run by us</option>
+      <option value="unsure">Not sure</option>
+    </select>
+    <button class="clear" id="clear">Clear filters</button>
+  </div>
+  <div class="active-filters" id="activeFilters"></div>
+  <div class="cards" id="cards"></div>
+  </main>
+  <aside class="side" aria-label="Charts">
   <div class="grid2">
     <section class="panel">
       <h2>Concept tags</h2>
@@ -128,22 +154,8 @@
       <div id="insights"></div>
     </section>
   </div>
-
-  <h2 class="section-title">Browse ads <span class="sub" id="count"></span></h2>
-  <div class="controls">
-    <input type="search" id="q" placeholder="Search brand, hook, notes" aria-label="Search ads">
-    <select id="fmt" aria-label="Format"><option value="all">All formats</option><option>Video</option><option>Still</option></select>
-    <select id="run" aria-label="Run at Glorious">
-      <option value="all">All ads</option>
-      <option value="own">Our own ads</option>
-      <option value="similar">We ran something similar</option>
-      <option value="no">Not run by us</option>
-      <option value="unsure">Not sure</option>
-    </select>
-    <button class="clear" id="clear">Clear filters</button>
+  </aside>
   </div>
-  <div class="active-filters" id="activeFilters"></div>
-  <div class="cards" id="cards"></div>
 </div>
 
 <div class="lightbox" id="lightbox" hidden role="dialog" aria-label="Screenshot" ><img id="lightboxImg" alt="Enlarged screenshot"></div>
