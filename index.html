@@ -355,7 +355,7 @@ function perfByTag() {
     const rows = labels.map((t) => { const l = own.filter((a) => a[key].includes(t)); const sp = l.reduce((x, a) => x + a.perf.spend, 0), rv = l.reduce((x, a) => x + a.perf.rev, 0), im = l.reduce((x, a) => x + a.perf.impr, 0), cl = l.reduce((x, a) => x + a.perf.clicks, 0); return { t, n: l.length, roas: sp ? rv / sp : 0, ctr: im ? (cl / im) * 100 : 0 }; }).filter((r) => r.n > 0).sort((a, b) => b.roas - a.roas);
     return `<b>${title}</b>` + (rows.length ? `<ul class="gap-list">${rows.map((r) => `<li>${esc(r.t.split(" (")[0])} <span class="sub">(${r.n} ad${r.n > 1 ? "s" : ""}): ROAS ${r.roas ? r.roas.toFixed(2) + "x" : "n/a"}, CTR ${r.ctr ? r.ctr.toFixed(2) + "%" : "n/a"}</span></li>`).join("")}</ul>` : '<p class="hint">Nothing here.</p>');
   };
-  return `<b>Our results by tag (${own.length} ads with results)</b><p class="hint">Weighted by spend. Small samples, so read with care.</p>` + block("By production style", CONCEPTS, "concept") + block("By messaging", EXECUTIONS, "exec");
+  return `<b>Our results by tag (${own.length} ads with results)</b><p class="hint">Weighted by spend. Small samples, so read with care.${own.some((x) => /sample/i.test(x.perf.period)) ? " <b>These are SAMPLE numbers, not real results.</b>" : ""}</p>` + block("By production style", CONCEPTS, "concept") + block("By messaging", EXECUTIONS, "exec");
 }
 function renderGaps() {
   const conceptStat = CONCEPTS.map((t) => {
