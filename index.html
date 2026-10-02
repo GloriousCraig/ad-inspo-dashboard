@@ -55,6 +55,7 @@
   .card h3 { margin: 0; font-size: 16px; }
   .meta { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
   .badge { font-size: 11px; font-weight: 650; text-transform: uppercase; letter-spacing: .04em; padding: 2px 8px; border-radius: 0; background: var(--chip); }
+  .badge.ai { background: transparent; border: 1px solid var(--muted, #888); }
   .badge.own { background: var(--own); color: #1c1c1c; }
   .badge.similar { background: var(--similar); color: #1c1c1c; }
   .badge.no { background: var(--no); color: #fff; }
@@ -241,7 +242,7 @@ function normalize(i) {
     cta: i.AdCTA ? [String(i.AdCTA)] : [],
     shot: parseShot(i.ScreenshotLink),
     img: typeof i._image === "string" && i._image.startsWith("data:image/") ? i._image : "",
-    by: i.SubmittedByName || "", created: i.Created || ""
+    by: i.SubmittedByName || "", ai: /^claude/i.test(i.FormSource || "") || /^claude/i.test(i.SubmittedByName || ""), created: i.Created || ""
   };
 }
 
@@ -330,6 +331,7 @@ function renderCards() {
         ${a.format ? `<span class="badge">${esc(a.format)}</span>` : ""}
         ${a.dest[0] ? `<span class="badge" title="Where the ad sends people">${esc(a.dest[0].split(" (")[0])}</span>` : ""}
         <span class="badge ${a.run}">${esc(RUN_LABEL[a.run])}</span>
+        ${a.ai ? `<span class="badge ai" title="Written by Claude from an Ad Library link">Added by Claude</span>` : `<span class="badge ai" title="Submitted by a person through the form">Added by a person</span>`}
       </div>
       ${a.hook ? `<div class="fld"><b>Hook:</b> ${esc(a.hook)}</div>` : ""}
       ${a.why ? `<div class="fld"><b>Why it works:</b> ${esc(a.why)}</div>` : ""}
@@ -366,6 +368,7 @@ function detailBlock(a) {
       ${a.format ? `<span class="badge">${esc(a.format)}</span>` : ""}
       ${a.dest[0] ? `<span class="badge" title="Where the ad sends people">${esc(a.dest[0].split(" (")[0])}</span>` : ""}
       <span class="badge ${a.run}">${esc(RUN_LABEL[a.run])}</span>
+        ${a.ai ? `<span class="badge ai" title="Written by Claude from an Ad Library link">Added by Claude</span>` : `<span class="badge ai" title="Submitted by a person through the form">Added by a person</span>`}
     </div>
     ${a.hook ? `<div class="fld"><b>Hook</b>${esc(a.hook)}</div>` : ""}
     ${a.why ? `<div class="fld"><b>Why it works</b>${esc(a.why)}</div>` : ""}
