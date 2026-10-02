@@ -56,6 +56,8 @@ jobs:
         run: node build.mjs
         env:
           DASHBOARD_PASSPHRASE: ${{ secrets.DASHBOARD_PASSPHRASE }}
+          # Temporary: no password. Delete the next line to lock the page again.
+          DASHBOARD_PUBLIC: "true"
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
