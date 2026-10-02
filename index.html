@@ -72,6 +72,13 @@
   .images-only .card:not(.noimg) > :not(.thumb) { display: none; }
   .images-only .card.noimg > :not(h3):not(.meta) { display: none; }
   .images-only .thumb img { max-height: none; }
+  .card { position: relative; }
+  .actions { position: absolute; top: 10px; right: 10px; display: flex; gap: 4px; opacity: 0; transition: opacity .12s; z-index: 2; }
+  .card:hover .actions, .card:focus-within .actions { opacity: 1; }
+  @media (hover: none) { .actions { opacity: 1; } }
+  .actions button { background: rgba(28, 28, 28, .92); border: 1px solid var(--line); color: #fff; font: inherit; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; padding: 4px 7px; cursor: pointer; }
+  .actions button:hover { border-color: var(--accent); color: var(--accent); }
+  .card.focus { outline: 2px solid var(--accent); outline-offset: 2px; }
   .card a { color: var(--accent); font-size: 13px; word-break: break-all; }
   .foot { color: var(--muted); font-size: 12px; margin-top: auto; }
   .gap-list { margin: 0; padding-left: 18px; font-size: 14px; }
@@ -291,8 +298,9 @@ function renderCards() {
   $("count").textContent = `(${list.length} of ${ADS.length})`;
   if (!list.length) { $("cards").innerHTML = `<div class="empty">No ads match these filters.</div>`; return; }
   $("cards").innerHTML = list.map((a) => `
-    <article class="card${a.img ? "" : " noimg"}">
-      ${a.img ? `<button class="thumb" data-zoom="${esc(a.id)}" title="${esc(a.brand)}" aria-label="Enlarge the screenshot for ${esc(a.brand)}"><img src="${a.img}" alt="Screenshot of the ${esc(a.brand)} ad" loading="lazy"></button>` : ""}
+    <article class="card${a.img ? "" : " noimg"}" id="ad-${esc(a.id)}">
+      <div class="actions"><button type="button" data-copy="ad" data-id="${esc(a.id)}" title="Copy a link to this ad on the dashboard">Copy link</button>${a.link ? `<button type="button" data-copy="src" data-id="${esc(a.id)}" title="Copy the link to the original ad">Copy source</button>` : ""}</div>
+      ${a.img ? (a.link ? `<a class="thumb" href="${esc(a.link)}" target="_blank" rel="noopener noreferrer" data-zoom="${esc(a.id)}" title="${esc(a.brand)} (right-click to copy the source link)" aria-label="Enlarge the screenshot for ${esc(a.brand)}"><img src="${a.img}" alt="Screenshot of the ${esc(a.brand)} ad" loading="lazy"></a>` : `<button class="thumb" data-zoom="${esc(a.id)}" title="${esc(a.brand)}" aria-label="Enlarge the screenshot for ${esc(a.brand)}"><img src="${a.img}" alt="Screenshot of the ${esc(a.brand)} ad" loading="lazy"></button>`) : ""}
       <h3>${esc(a.brand)}</h3>
       <div class="meta">
         ${a.format ? `<span class="badge">${esc(a.format)}</span>` : ""}
@@ -326,14 +334,50 @@ function renderAll() {
   renderCards();
 }
 
+function copyText(text) {
+  if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(text).catch(() => {}); return; }
+  const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+  document.body.appendChild(t); t.select(); try { document.execCommand("copy"); } catch {} t.remove();
+}
+// A link like  .../#ad-11  scrolls to and highlights that ad.
+function openFromHash() {
+  const m = location.hash.match(/^#ad-(.+)$/);
+  if (!m) return;
+  const id = decodeURIComponent(m[1]);
+  if (!ADS.some((a) => String(a.id) === id)) return;
+  let el = document.getElementById("ad-" + id);
+  if (!el) { // hidden by a filter: clear the filters so it shows
+    state.q = ""; state.format = "all"; state.run = "all"; state.concept.clear(); state.exec.clear(); state.dest.clear(); state.cta.clear();
+    $("q").value = ""; $("fmt").value = "all"; $("run").value = "all"; renderAll();
+    el = document.getElementById("ad-" + id);
+  }
+  if (!el) return;
+  document.querySelectorAll(".card.focus").forEach((c) => c.classList.remove("focus"));
+  el.classList.add("focus");
+  el.scrollIntoView({ block: "center", behavior: "smooth" });
+}
+window.addEventListener("hashchange", openFromHash);
+
 function toggle(key, label) {
   const set = state[key];
   set.has(label) ? set.delete(label) : set.add(label);
   renderAll();
 }
 document.addEventListener("click", (e) => {
+  const cp = e.target.closest("[data-copy]");
+  if (cp) {
+    const ad = ADS.find((a) => String(a.id) === cp.dataset.id);
+    if (ad) {
+      const text = cp.dataset.copy === "src" ? ad.link : location.origin + location.pathname + "#ad-" + ad.id;
+      copyText(text);
+      const old = cp.textContent; cp.textContent = "Copied";
+      setTimeout(() => { cp.textContent = old; }, 1200);
+    }
+    return;
+  }
   const z = e.target.closest("[data-zoom]");
   if (z) {
+    if (z.tagName === "A") { if (e.ctrlKey || e.metaKey || e.shiftKey || e.button !== 0) return; e.preventDefault(); }
     const ad = ADS.find((a) => String(a.id) === z.dataset.zoom);
     if (ad && ad.img) { $("lightboxImg").src = ad.img; $("lightbox").hidden = false; }
     return;
@@ -388,7 +432,7 @@ async function load() {
   } catch (err) {
     $("cards").innerHTML = `<div class="empty">Could not load data/ads.json (${esc(err.message)}).</div>`;
   }
-  renderKpis(); renderGaps(); renderAll();
+  renderKpis(); renderGaps(); renderAll(); openFromHash();
   try {
     const ins = await getJson("data/insights.json", "insights");
     $("insightHint").textContent = ins.sample ? "Sample insights, made up to show the layout." : "Suggestions on what to test next." + (ins.generated ? " Generated " + String(ins.generated).slice(0, 10) + "." : "");
