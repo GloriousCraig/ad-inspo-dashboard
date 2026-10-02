@@ -99,12 +99,10 @@
   <div class="controls">
     <input type="search" id="q" placeholder="Search brand, hook, notes" aria-label="Search ads">
     <select id="fmt" aria-label="Format"><option value="all">All formats</option><option>Video</option><option>Still</option></select>
-    <select id="run" aria-label="Run at Glorious">
+    <select id="run" aria-label="Whose ads">
       <option value="all">All ads</option>
-      <option value="own">Our own ads</option>
-      <option value="similar">We ran something similar</option>
-      <option value="no">Not run by us</option>
-      <option value="unsure">Not sure</option>
+      <option value="own">Glorious's own ads</option>
+      <option value="other">Ads from other brands</option>
     </select>
     <button class="clear" id="clear">Clear filters</button>
   </div>
@@ -116,13 +114,13 @@
     <section class="panel">
       <h2>Concept tags</h2>
       <p class="hint">What the ad is saying or doing. Click a bar to filter.</p>
-      <div class="legend"><span><i style="background:var(--bar)"></i>Inspo collected</span><span><i style="background:var(--bar-own)"></i>Run by Glorious</span></div>
+      <div class="legend"><span><i style="background:var(--bar)"></i>Ads from other brands</span><span><i style="background:var(--bar-own)"></i>Glorious's own ads</span></div>
       <div id="conceptChart"></div>
     </section>
     <section class="panel">
       <h2>Execution tags</h2>
       <p class="hint">How the ad is made. Click a bar to filter.</p>
-      <div class="legend"><span><i style="background:var(--bar)"></i>Inspo collected</span><span><i style="background:var(--bar-own)"></i>Run by Glorious</span></div>
+      <div class="legend"><span><i style="background:var(--bar)"></i>Ads from other brands</span><span><i style="background:var(--bar-own)"></i>Glorious's own ads</span></div>
       <div id="execChart"></div>
     </section>
   </div>
@@ -131,13 +129,13 @@
     <section class="panel">
       <h2>Where the ads send people</h2>
       <p class="hint">Destination of each ad. Click a bar to filter.</p>
-      <div class="legend"><span><i style="background:var(--bar)"></i>Inspo collected</span><span><i style="background:var(--bar-own)"></i>Run by Glorious</span></div>
+      <div class="legend"><span><i style="background:var(--bar)"></i>Ads from other brands</span><span><i style="background:var(--bar-own)"></i>Glorious's own ads</span></div>
       <div id="destChart"></div>
     </section>
     <section class="panel">
       <h2>Calls to action</h2>
       <p class="hint">How each ad asks for the click. Click a bar to filter.</p>
-      <div class="legend"><span><i style="background:var(--bar)"></i>Inspo collected</span><span><i style="background:var(--bar-own)"></i>Run by Glorious</span></div>
+      <div class="legend"><span><i style="background:var(--bar)"></i>Ads from other brands</span><span><i style="background:var(--bar-own)"></i>Glorious's own ads</span></div>
       <div id="ctaChart"></div>
     </section>
   </div>
@@ -216,7 +214,8 @@ function normalize(i) {
 
 function matches(a, skip) {
   if (state.format !== "all" && a.format !== state.format) return false;
-  if (state.run !== "all" && a.run !== state.run) return false;
+  if (state.run === "own" && a.run !== "own") return false;
+  if (state.run === "other" && a.run === "own") return false;
   if (skip !== "concept" && state.concept.size && !a.concept.some((t) => state.concept.has(t))) return false;
   if (skip !== "exec" && state.exec.size && !a.exec.some((t) => state.exec.has(t))) return false;
   if (skip !== "dest" && state.dest.size && !a.dest.some((t) => state.dest.has(t))) return false;
@@ -227,7 +226,7 @@ function matches(a, skip) {
   }
   return true;
 }
-const isOurs = (a) => a.run === "own" || a.run === "similar";
+const isOurs = (a) => a.run === "own"; // Glorious's own ads. "We ran something similar / not sure" only describes ads from other brands.
 
 function renderKpis() {
   const total = ADS.length;
@@ -238,7 +237,7 @@ function renderKpis() {
   const top = Object.entries(counts).sort((x, y) => y[1] - x[1])[0];
   const items = [
     [total, "Ads collected"],
-    [ours, "Run by Glorious (own or similar)"],
+    [ours, "Glorious's own ads"],
     [total ? Math.round((video / total) * 100) + "%" : "0%", "Video (rest are stills)"],
     [top ? top[0].split(" (")[0] : "None yet", top ? `Top concept (${top[1]} ads)` : "Top concept"]
   ];
@@ -254,7 +253,7 @@ function renderChart(el, labels, key) {
   const max = Math.max(1, ...rows.map((r) => r.total));
   $(el).innerHTML = rows.map((r) => {
     const other = r.total - r.own;
-    return `<button class="bar-row ${set.has(r.label) ? "active" : ""}" data-key="${key}" data-label="${esc(r.label)}" aria-pressed="${set.has(r.label)}" title="${esc(r.label)}: ${r.total} ads, ${r.own} run by Glorious">
+    return `<button class="bar-row ${set.has(r.label) ? "active" : ""}" data-key="${key}" data-label="${esc(r.label)}" aria-pressed="${set.has(r.label)}" title="${esc(r.label)}: ${r.total} ads, ${r.own} Glorious ads">
       <span class="lab">${esc(r.label)}</span>
       <span class="track"><span class="seg" style="width:${(other / max) * 100}%;background:var(--bar)"></span><span class="seg" style="width:${(r.own / max) * 100}%;background:var(--bar-own)"></span></span>
       <span class="num">${r.total}</span></button>`;
