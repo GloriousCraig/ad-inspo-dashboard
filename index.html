@@ -107,6 +107,35 @@
   .perf.none { color: var(--muted); font-size: 12px; font-style: italic; }
   .pchip { background: var(--chip); padding: 3px 8px; font-size: 12px; }
   .pchip b { color: #FFA40D; margin-right: 4px; }
+  .ticker { display: flex; align-items: center; gap: 0; margin: 10px 0 4px; background: #111; border: 1px solid var(--line); border-left: 4px solid #C0DF16; overflow: hidden; }
+  .ticker[hidden] { display: none; }
+  .tk-label { flex: none; padding: 9px 12px; font: 700 12px "Space Grotesk", sans-serif; letter-spacing: .14em; color: #1c1c1c; background: #C0DF16; }
+  .tk-view { flex: 1 1 auto; overflow: hidden; position: relative; mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent); }
+  .tk-track { display: inline-flex; white-space: nowrap; animation: tkScroll var(--tk-dur, 60s) linear infinite; will-change: transform; }
+  .tk-view:hover .tk-track { animation-play-state: paused; }
+  .tk-item { display: inline-flex; gap: 8px; align-items: center; padding: 9px 34px 9px 0; font-size: 14px; cursor: pointer; background: none; border: 0; color: inherit; font-family: inherit; }
+  .tk-item .heat { letter-spacing: -1px; }
+  .tk-item b { color: #fff; font-weight: 600; }
+  .tk-item:hover b { color: #FFA40D; }
+  .tk-item::after { content: "\2022"; margin-left: 30px; color: #444; }
+  @keyframes tkScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .tk-legend { flex: none; padding: 0 12px; font-size: 11px; color: var(--muted); white-space: nowrap; }
+  @media (max-width: 900px) { .tk-legend { display: none; } }
+  @media (prefers-reduced-motion: reduce) { .tk-track { animation: none; } .tk-view { overflow-x: auto; } }
+  .intro { margin: 12px 0 4px; background: var(--surface); border: 1px solid var(--line); }
+  .intro > summary { cursor: pointer; padding: 11px 16px; font-weight: 700; letter-spacing: .03em; list-style: none; display: flex; align-items: center; gap: 10px; }
+  .intro > summary::-webkit-details-marker { display: none; }
+  .intro > summary::before { content: "\25B8"; color: #FFA40D; transition: transform .25s; }
+  .intro[open] > summary::before { transform: rotate(90deg); }
+  .intro-body { padding: 0 18px 14px; font-size: 14px; }
+  .intro-body ul { margin: 6px 0 12px; padding-left: 18px; }
+  .intro-body li { margin: 6px 0; line-height: 1.5; }
+  .intro-actions { display: flex; gap: 10px; }
+  .submit-btn { display: inline-block; background: #FFA40D; color: #1c1c1c; font-weight: 700; padding: 9px 18px; text-decoration: none; letter-spacing: .02em; transition: transform .2s, filter .2s; }
+  .submit-btn:hover { transform: translateY(-2px); filter: brightness(1.08); }
+  .submit-btn[hidden] { display: none; }
+  .badge.heat { background: transparent; padding: 0 6px 0 0; letter-spacing: -1px; font-size: 13px; }
+  button.del { color: #ff7a7a; }
   .badge.ai { background: transparent; border: 1px solid var(--muted, #888); }
   .badge.own { background: var(--own); color: #1c1c1c; }
   .badge.similar { background: var(--similar); color: #1c1c1c; }
@@ -178,6 +207,23 @@
     <span class="sub" id="gen"></span>
   </header>
   <div class="banner" id="sampleBanner" hidden></div>
+
+  <div class="ticker" id="ticker" hidden aria-label="Top insights ticker"><span class="tk-label">INSIGHTS</span><div class="tk-view"><div class="tk-track" id="tkTrack"></div></div><span class="tk-legend" title="How to read the ticker">&#128293;&#128293;&#128293; big &nbsp; &#128293; small &nbsp; &#128588; try now</span></div>
+
+  <details class="intro" id="intro" open>
+    <summary>How to use this dashboard</summary>
+    <div class="intro-body">
+      <ul>
+        <li><b>What it is.</b> A hand-picked library of ads from Glorious and other brands, used to spot what we have not tried and what others are doing. It is a biased sample on purpose: it reflects what we like and what we want to learn from.</li>
+        <li><b>Browse.</b> Click an ad to enlarge it. Use <i>Show details</i> for the written notes, and the search, format and "whose ads" filters above the grid. Sort by newest, longest running or best results.</li>
+        <li><b>Filter with the charts.</b> Click any bar on the right (production, messaging, destination) to filter the ads. Click it again to clear.</li>
+        <li><b>The round buttons.</b> The blue one shows <i>Gaps</i> (what others do that we have not). The gold one shows <i>Claude's insights</i>. The ticker above scrolls the top ones: &#128293;&#128293;&#128293; is the most insightful, &#128293; is smaller, &#128588; is something to try right now.</li>
+        <li><b>Fix or remove an ad.</b> <i>Edit</i> opens a short form (tags, hook, results) and saves back to the list. <i>Delete</i> removes an ad from the archive, and so from the analysis. Use it for anything that is skewing the picture, such as an ad we only liked the color of.</li>
+        <li><b>Add an ad.</b> Use the button below. New ads show here after the next refresh.</li>
+      </ul>
+      <div class="intro-actions"><a class="submit-btn" id="submitBtn" href="#" target="_blank" rel="noopener noreferrer" hidden>Submit an ad</a></div>
+    </div>
+  </details>
 
   <div class="kpis" id="kpis"></div>
 
@@ -251,6 +297,7 @@ const state = { sort: "new", q: "", format: "all", run: "all", concept: new Set(
 let ADS = [];
 let NOTE_FORM = "";
 let EDIT_FORM = null;
+let DELETE_FORM = null;
 
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -415,7 +462,7 @@ function renderCards() {
   if (!introPlayed) { introPlayed = true; setTimeout(() => box.classList.remove("enter"), 5200); }
   $("cards").innerHTML = list.map((a, i) => `
     <article class="card${a.img ? "" : " noimg"}" id="ad-${esc(a.id)}" style="--i:${i}">
-      <div class="actions"><button type="button" data-edit="${esc(a.id)}" title="Edit this ad (tags, hook, notes and more)">Edit</button><button type="button" data-copy="ad" data-id="${esc(a.id)}" title="Copy a link to this ad on the dashboard">Copy link</button>${a.link ? `<button type="button" data-copy="src" data-id="${esc(a.id)}" title="Copy the link to the original ad">Copy source</button>` : ""}</div>
+      <div class="actions"><button type="button" data-delete="${esc(a.id)}" title="Delete this ad from the archive" class="del">Delete</button><button type="button" data-edit="${esc(a.id)}" title="Edit this ad (tags, hook, notes and more)">Edit</button><button type="button" data-copy="ad" data-id="${esc(a.id)}" title="Copy a link to this ad on the dashboard">Copy link</button>${a.link ? `<button type="button" data-copy="src" data-id="${esc(a.id)}" title="Copy the link to the original ad">Copy source</button>` : ""}</div>
       ${a.img ? (a.link ? `<a class="thumb" href="${esc(a.link)}" target="_blank" rel="noopener noreferrer" data-zoom="${esc(a.id)}" title="${esc(a.brand)} (right-click to copy the source link)" aria-label="Enlarge the screenshot for ${esc(a.brand)}"><img src="${a.img}" alt="Screenshot of the ${esc(a.brand)} ad" loading="lazy"></a>` : `<button class="thumb" data-zoom="${esc(a.id)}" title="${esc(a.brand)}" aria-label="Enlarge the screenshot for ${esc(a.brand)}"><img src="${a.img}" alt="Screenshot of the ${esc(a.brand)} ad" loading="lazy"></button>`) : ""}
       <h3${a.img ? "" : ` data-zoom="${esc(a.id)}" style="cursor:pointer"`}>${esc(a.brand)}</h3>
       <div class="meta">
@@ -473,6 +520,7 @@ function detailBlock(a) {
     ${tags ? `<div class="tags">${tags}</div>` : ""}
     <div class="lb-actions">
       <button type="button" class="clear" data-edit="${esc(a.id)}">Edit</button>
+      <button type="button" class="clear del" data-delete="${esc(a.id)}">Delete</button>
       <button type="button" class="clear" data-copy="ad" data-id="${esc(a.id)}">Copy link</button>
       ${a.link ? `<button type="button" class="clear" data-copy="src" data-id="${esc(a.id)}">Copy source</button>` : ""}
     </div>
@@ -528,6 +576,14 @@ function toggle(key, label) {
 document.addEventListener("click", (e) => {
   const db = e.target.closest("[data-drawer]");
   if (db) { const d = $(db.dataset.drawer); const open = !d.classList.contains("open"); d.classList.toggle("open", open); db.setAttribute("aria-expanded", String(open)); return; }
+  const xb = e.target.closest("[data-delete]");
+  if (xb) {
+    e.preventDefault(); e.stopPropagation();
+    const ad = ADS.find((x) => String(x.id) === String(xb.dataset.delete));
+    if (DELETE_FORM && ad) openNotePopup(DELETE_FORM.url + "&" + DELETE_FORM.keys.id + "=" + encodeURIComponent(ad.id) + "&" + DELETE_FORM.keys.title + "=" + encodeURIComponent(ad.brand), 560, 520);
+    else alert("Delete is not switched on yet. Ask Craig to finish the delete form.");
+    return;
+  }
   const eb = e.target.closest("[data-edit]");
   if (eb) {
     e.preventDefault(); e.stopPropagation();
@@ -632,11 +688,27 @@ async function load() {
     EDIT_FORM = ins.editForm && typeof ins.editForm.url === "string" && ins.editForm.url.startsWith("https://forms.") && ins.editForm.keys ? ins.editForm : null;
     NOTE_FORM = typeof ins.noteForm === "string" && ins.noteForm.startsWith("https://forms.") ? ins.noteForm : "";
     $("insightHint").textContent = ins.sample ? "Sample insights, made up to show the layout." : "Suggestions on what to test next." + (ins.generated ? " Generated " + String(ins.generated).slice(0, 10) + "." : "");
-    $("insights").innerHTML = (ins.items || []).map((i) => `<div class="insight"><b>${esc(i.title)}</b>${esc(i.body)}</div>`).join("") || `<p class="hint">No insights yet.</p>`;
+    DELETE_FORM = ins.deleteForm && typeof ins.deleteForm.url === "string" && ins.deleteForm.url.startsWith("https://forms.") && ins.deleteForm.keys ? ins.deleteForm : null;
+    if (typeof ins.submitForm === "string" && ins.submitForm.startsWith("https://forms.")) { const sb = $("submitBtn"); sb.href = ins.submitForm; sb.hidden = false; }
+    const heatIcon = (i) => (i.try ? "&#128588;" : "") + "&#128293;".repeat(Math.max(0, Math.min(3, i.heat || 0)));
+    $("insights").innerHTML = (ins.items || []).map((i) => `<div class="insight"><b>${heatIcon(i) ? '<span class="badge heat">' + heatIcon(i) + "</span>" : ""}${esc(i.title)}</b>${esc(i.body)}</div>`).join("") || `<p class="hint">No insights yet.</p>`;
+    // ticker: the hottest first, then things to try now
+    const hot = (ins.items || []).filter((i) => i.heat || i.try).sort((a, b) => ((b.heat || 0) + (b.try ? 1.5 : 0)) - ((a.heat || 0) + (a.try ? 1.5 : 0)));
+    if (hot.length) {
+      const one = hot.map((i, n) => `<button type="button" class="tk-item" data-tk="${n}"><span class="heat">${heatIcon(i)}</span><b>${esc(i.title)}</b></button>`).join("");
+      $("tkTrack").innerHTML = one + one;
+      $("tkTrack").style.setProperty("--tk-dur", Math.max(40, hot.length * 12) + "s");
+      $("ticker").hidden = false;
+    }
+    renderCardsAgain();
   } catch {
     $("insights").innerHTML = `<p class="hint">No insights yet. They will appear here once generated.</p>`;
   }
 }
+function renderCardsAgain() { try { renderCards(); } catch {} }
+document.addEventListener("click", (e) => { const t = e.target.closest("[data-tk]"); if (!t) return; const d = $("drawerInsights"); if (!d.classList.contains("open")) { d.classList.add("open"); document.querySelectorAll('[data-drawer="drawerInsights"]').forEach((b) => b.setAttribute("aria-expanded", "true")); } d.scrollIntoView({ behavior: "smooth", block: "start" }); });
+// remember whether the intro was closed
+try { const intro = $("intro"); if (localStorage.getItem("adArchiveIntro") === "closed") intro.open = false; intro.addEventListener("toggle", () => { try { localStorage.setItem("adArchiveIntro", intro.open ? "open" : "closed"); } catch {} }); } catch {}
 load();
 </script>
 </body>
